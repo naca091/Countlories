@@ -1,6 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Input, Badge, Button, Carousel, Card, Menu, Pagination, Dropdown } from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import {
+  Input,
+  Badge,
+  Button,
+  Carousel,
+  Card,
+  Menu,
+  Pagination,
+  Dropdown,
+} from "antd";
+import { Link, useNavigate } from "react-router-dom";
 import {
   SearchOutlined,
   UserOutlined,
@@ -10,10 +19,11 @@ import {
   AppstoreOutlined,
   BookOutlined,
   CalculatorOutlined,
-  PlusCircleOutlined
-} from '@ant-design/icons';
-import axios from 'axios';
-import { MenuDetailModal } from '../Menu'; // Assuming MenuDetailModal is a separate component
+  PlusCircleOutlined,
+} from "@ant-design/icons";
+import axios from "axios";
+import { MenuDetailModal } from "../Menu"; // Assuming MenuDetailModal is a separate component
+import "./fontend/homepage.css";
 
 const { Search } = Input;
 
@@ -33,10 +43,10 @@ const Homepage = () => {
   useEffect(() => {
     const fetchMenus = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/menus');
+        const response = await axios.get("http://localhost:5000/api/menus");
         setMenus(response.data.data);
       } catch (error) {
-        console.error('Error fetching menus:', error);
+        console.error("Error fetching menus:", error);
       }
     };
     fetchMenus();
@@ -44,7 +54,7 @@ const Homepage = () => {
 
   // Get user from localStorage
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
       setUser(storedUser);
     }
@@ -58,9 +68,9 @@ const Homepage = () => {
 
   // Handle logout
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
     setUser(null);
-    navigate('/login');
+    navigate("/login");
   };
 
   // Render menu items with pagination
@@ -85,24 +95,24 @@ const Homepage = () => {
   const userMenu = (
     <Menu>
       <Button>
-      <Menu.Item key="profile" onClick={() => navigate('/user/profile')}>
-        View Profile
-      </Menu.Item>
+        <Menu.Item key="profile" onClick={() => navigate("/user/profile")}>
+          View Profile
+        </Menu.Item>
       </Button>
       <Button>
-      <Menu.Item key="logout" onClick={handleLogout}>
-        Logout
-      </Menu.Item>
-      </Button>   
+        <Menu.Item key="logout" onClick={handleLogout}>
+          Logout
+        </Menu.Item>
+      </Button>
     </Menu>
   );
 
   const bannerImages = [
-    '/api/placeholder/1200/400',
-    '/api/placeholder/1200/400',
-    '/api/placeholder/1200/400',
-    '/api/placeholder/1200/400',
-    '/api/placeholder/1200/400'
+    "/api/placeholder/1200/400",
+    "/api/placeholder/1200/400",
+    "/api/placeholder/1200/400",
+    "/api/placeholder/1200/400",
+    "/api/placeholder/1200/400",
   ];
 
   return (
@@ -113,11 +123,15 @@ const Homepage = () => {
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold text-green-600">FoodApp</div>
             <div className="w-1/3">
-              <Search placeholder="Search for recipes..." prefix={<SearchOutlined />} className="w-full" />
+              <Search
+                placeholder="Search for recipes..."
+                prefix={<SearchOutlined />}
+                className="w-full"
+              />
             </div>
             <div className="flex items-center space-x-6">
               {user ? (
-                <Dropdown overlay={userMenu} trigger={['click']}>
+                <Dropdown overlay={userMenu} trigger={["click"]}>
                   <Button type="link" icon={<UserOutlined />}>
                     {user.username}
                   </Button>
@@ -130,7 +144,9 @@ const Homepage = () => {
                 </Link>
               )}
               <Badge count={0}>
-                <Button type="link" icon={<ShoppingCartOutlined />}>Cart</Button>
+                <Button type="link" icon={<ShoppingCartOutlined />}>
+                  Cart
+                </Button>
               </Badge>
             </div>
           </div>
@@ -141,12 +157,48 @@ const Homepage = () => {
       <div className="bg-green-600 text-white">
         <div className="container mx-auto px-4">
           <div className="flex items-center space-x-8 py-2">
-            <Button type="link" className="text-white flex items-center" icon={<HomeOutlined />}>Home</Button>
-            <Button type="link" className="text-white flex items-center" icon={<AppstoreOutlined />}>Products</Button>
-            <Button type="link" className="text-white flex items-center" icon={<BookOutlined />}>Recipes</Button>
-            <Button type="link" className="text-white flex items-center" icon={<CalculatorOutlined />}>Calories Tool</Button>
-            <Button type="link" className="text-white flex items-center" icon={<PlusCircleOutlined />}>Add Coins</Button>
-            <Button type="link" className="text-white flex items-center" icon={<PlayCircleOutlined />}>Watch Ads</Button>
+            <Button
+              type="link"
+              className="text-white flex items-center"
+              icon={<HomeOutlined />}
+            >
+              Home
+            </Button>
+            <Button
+              type="link"
+              className="text-white flex items-center"
+              icon={<AppstoreOutlined />}
+            >
+              Products
+            </Button>
+            <Button
+              type="link"
+              className="text-white flex items-center"
+              icon={<BookOutlined />}
+            >
+              Recipes
+            </Button>
+            <Button
+              type="link"
+              className="text-white flex items-center"
+              icon={<CalculatorOutlined />}
+            >
+              Calories Tool
+            </Button>
+            <Button
+              type="link"
+              className="text-white flex items-center"
+              icon={<PlusCircleOutlined />}
+            >
+              Add Coins
+            </Button>
+            <Button
+              type="link"
+              className="text-white flex items-center"
+              icon={<PlayCircleOutlined />}
+            >
+              Watch Ads
+            </Button>
           </div>
         </div>
       </div>
@@ -156,7 +208,11 @@ const Homepage = () => {
         <Carousel autoplay className="rounded-lg overflow-hidden">
           {bannerImages.map((image, index) => (
             <div key={index}>
-              <img src={image} alt={`Banner ${index + 1}`} className="w-full h-[400px] object-cover" />
+              <img
+                src={image}
+                alt={`Banner ${index + 1}`}
+                className="w-full h-[400px] object-cover"
+              />
             </div>
           ))}
         </Carousel>

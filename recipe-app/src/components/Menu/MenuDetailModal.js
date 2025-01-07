@@ -1,6 +1,11 @@
-import React from 'react';
-import { Modal, Button, Typography } from 'antd';
-import { ClockCircleOutlined, FireOutlined, TeamOutlined, UnlockOutlined } from '@ant-design/icons';
+import React from "react";
+import { Modal, Button, Typography } from "antd";
+import {
+  ClockCircleOutlined,
+  FireOutlined,
+  TeamOutlined,
+  UnlockOutlined,
+} from "@ant-design/icons";
 
 const { Text } = Typography;
 
@@ -18,19 +23,19 @@ const MenuDetailModal = ({ menu, visible, onClose }) => {
         </Button>,
         <Button key="close" onClick={onClose}>
           Close
-        </Button>
+        </Button>,
       ]}
       width={800}
     >
       <div className="space-y-6">
         <div className="w-full h-[400px] overflow-hidden rounded-lg">
-          <img 
-            //src={`http://localhost:5000${menu.image}`}
-            alt={menu.name} 
+          <img
+            src={`http://localhost:5000${menu.image}`}
+            alt={menu.name}
             className="w-full h-full object-cover"
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = '/api/placeholder/800/400';
+              e.target.src = "/api/placeholder/800/400";
             }}
           />
         </div>
