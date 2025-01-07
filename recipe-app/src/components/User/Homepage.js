@@ -86,6 +86,14 @@ const Homepage = () => {
         cover={<img alt={menu.name} src={menu.imageUrl} />}
         onClick={() => handleMenuClick(menu)}
       >
+        <img
+          src={`http://localhost:5000${menu.image}`}
+          style={{
+            width: "10%",
+            height: "200px",
+            objectFit: "cover",
+          }}
+        />
         <Card.Meta title={menu.name} description={menu.description} />
       </Card>
     ));
