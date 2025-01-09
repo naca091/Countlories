@@ -1,5 +1,44 @@
 img {
   width: 100%;
   height: auto;
-  object-fit: cover; /* Giữ ảnh luôn đúng kích thước và không méo */
+  object-fit: cover;
+}
+.banner-line {
+  border-bottom: 2px solid #ffffff;
+  margin: 20px 0;
+}
+
+/* Menu container đã có thay đổi */
+.menu-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.menu-item {
+  background-color: #fffdfd;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.menu-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.menu-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
 }

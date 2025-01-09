@@ -24,6 +24,12 @@ import {
 import axios from "axios";
 import { MenuDetailModal } from "../Menu"; // Assuming MenuDetailModal is a separate component
 import "./fontend/homepage.css";
+import "./fontend/footer.css";
+import "./fontend/header.css";
+import banner1 from "./images/banner1.jpg";
+import banner2 from "./images/banner2.png";
+import banner3 from "./images/banner3.png";
+import banner4 from "./images/banner4.png";
 
 const { Search } = Input;
 
@@ -38,6 +44,7 @@ const Homepage = () => {
   // State for user
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const path = require("path");
 
   // Fetch menus from API
   useEffect(() => {
@@ -73,29 +80,25 @@ const Homepage = () => {
     navigate("/login");
   };
 
-  // Render menu items with pagination
   const renderMenuItems = () => {
     const startIndex = (currentPage - 1) * menusPerPage;
     const endIndex = startIndex + menusPerPage;
     const pagedMenus = menus.slice(startIndex, endIndex);
 
     return pagedMenus.map((menu, index) => (
-      <Card
+      <div
         key={index}
-        hoverable
-        cover={<img alt={menu.name} src={menu.imageUrl} />}
+        className="menu-item flex flex-col items-center bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
         onClick={() => handleMenuClick(menu)}
       >
         <img
           src={`http://localhost:5000${menu.image}`}
-          style={{
-            width: "10%",
-            height: "200px",
-            objectFit: "cover",
-          }}
+          alt={menu.name}
+          className="menu-image mb-4"
         />
-        <Card.Meta title={menu.name} description={menu.description} />
-      </Card>
+        <h3 className="text-lg font-semibold">{menu.name}</h3>
+        <p className="text-gray-600 text-sm text-center">{menu.description}</p>
+      </div>
     ));
   };
 
@@ -115,124 +118,131 @@ const Homepage = () => {
     </Menu>
   );
 
-  const bannerImages = [
-    "/api/placeholder/1200/400",
-    "/api/placeholder/1200/400",
-    "/api/placeholder/1200/400",
-    "/api/placeholder/1200/400",
-    "/api/placeholder/1200/400",
-  ];
+  const bannerImages = [banner1, banner2, banner3, banner4];
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Top Navbar */}
-      <div className="bg-white shadow">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold text-green-600">FoodApp</div>
-            <div className="w-1/3">
-              <Search
-                placeholder="Search for recipes..."
-                prefix={<SearchOutlined />}
-                className="w-full"
-              />
-            </div>
-            <div className="flex items-center space-x-6">
-              {user ? (
-                <Dropdown overlay={userMenu} trigger={["click"]}>
-                  <Button type="link" icon={<UserOutlined />}>
-                    {user.username}
-                  </Button>
-                </Dropdown>
-              ) : (
-                <Link to="/login">
-                  <Button type="link" icon={<UserOutlined />}>
-                    Login / Register
-                  </Button>
-                </Link>
-              )}
-              <Badge count={0}>
-                <Button type="link" icon={<ShoppingCartOutlined />}>
-                  Cart
-                </Button>
-              </Badge>
-            </div>
-          </div>
+      <div className="navbar">
+        <div className="logo">
+          <img src="/logo.png" alt="Logo" />
+          <h1>FoodApp</h1>
+        </div>
+
+        <div className="search-bar">
+          <Input
+            placeholder="Search for recipes..."
+            prefix={<SearchOutlined />}
+            style={{ width: "300px" }}
+          />
+        </div>
+
+        <div className="user-actions">
+          {user ? (
+            <Dropdown overlay={userMenu} trigger={["click"]}>
+              <Button
+                type="link"
+                icon={<UserOutlined />}
+                className="text-green-600"
+              >
+                {user.username}
+              </Button>
+            </Dropdown>
+          ) : (
+            <Link to="/login">
+              <Button
+                type="link"
+                icon={<UserOutlined />}
+                className="text-green-600"
+              >
+                Login / Register
+              </Button>
+            </Link>
+          )}
+          <Badge count={0}>
+            <Button
+              type="link"
+              icon={<ShoppingCartOutlined />}
+              className="text-green-600"
+            >
+              Cart
+            </Button>
+          </Badge>
         </div>
       </div>
 
       {/* Secondary Navbar */}
-      <div className="bg-green-600 text-white">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center space-x-8 py-2">
-            <Button
-              type="link"
-              className="text-white flex items-center"
-              icon={<HomeOutlined />}
-            >
-              Home
-            </Button>
-            <Button
-              type="link"
-              className="text-white flex items-center"
-              icon={<AppstoreOutlined />}
-            >
-              Products
-            </Button>
-            <Button
-              type="link"
-              className="text-white flex items-center"
-              icon={<BookOutlined />}
-            >
-              Recipes
-            </Button>
-            <Button
-              type="link"
-              className="text-white flex items-center"
-              icon={<CalculatorOutlined />}
-            >
-              Calories Tool
-            </Button>
-            <Button
-              type="link"
-              className="text-white flex items-center"
-              icon={<PlusCircleOutlined />}
-            >
-              Add Coins
-            </Button>
-            <Button
-              type="link"
-              className="text-white flex items-center"
-              icon={<PlayCircleOutlined />}
-            >
-              Watch Ads
-            </Button>
-          </div>
+      <div className="navbar secondary-navbar">
+        <div className="nav-links">
+          <Button
+            type="link"
+            className="text-green-600 flex items-center"
+            icon={<HomeOutlined />}
+          >
+            Home
+          </Button>
+          <Button
+            type="link"
+            className="text-green-600 flex items-center"
+            icon={<AppstoreOutlined />}
+          >
+            Products
+          </Button>
+          <Button
+            type="link"
+            className="text-green-600 flex items-center"
+            icon={<BookOutlined />}
+          >
+            Recipes
+          </Button>
+          <Button
+            type="link"
+            className="text-green-600 flex items-center"
+            icon={<CalculatorOutlined />}
+          >
+            Calories Tool
+          </Button>
+          <Button
+            type="link"
+            className="text-green-600 flex items-center"
+            icon={<PlusCircleOutlined />}
+          >
+            Add Coins
+          </Button>
+          <Button
+            type="link"
+            className="text-green-600 flex items-center"
+            icon={<PlayCircleOutlined />}
+          >
+            Watch Ads
+          </Button>
         </div>
       </div>
 
       {/* Banner Carousel */}
+      {/* Banner Carousel */}
       <div className="container mx-auto px-4 py-6">
-        <Carousel autoplay className="rounded-lg overflow-hidden">
+        <Carousel autoplay className="rounded-lg overflow-hidden carousel">
           {bannerImages.map((image, index) => (
             <div key={index}>
               <img
                 src={image}
                 alt={`Banner ${index + 1}`}
-                className="w-full h-[400px] object-cover"
+                className="rounded-lg"
               />
             </div>
           ))}
         </Carousel>
       </div>
 
+      <div className="banner-line"></div>
+
       {/* Menu Grid with Pagination */}
-      <div className="container mx-auto px-4 py-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="container mx-auto px-4 py-6 menu-container">
         {renderMenuItems()}
       </div>
 
-      {/* Pagination */}
-      <div className="flex justify-center py-4">
+      {/* Phân trang căn giữa */}
+      <div className="pagination-container">
         <Pagination
           current={currentPage}
           total={menus.length}
@@ -247,6 +257,177 @@ const Homepage = () => {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
       />
+
+      {/* foooter */}
+      <footer className="footer">
+        <div className="container">
+          <div className="footer-top">
+            <div className="footer-top-content">
+              <div className="footer-top-img">
+                <img src="./assets/img/logofootercalo.png" alt="" />
+              </div>
+              <div className="footer-top-subbox">
+                <div className="footer-top-subs">
+                  <h2 className="footer-top-subs-title">Đăng ký nhận tin</h2>
+                  <p className="footer-top-subs-text">
+                    Nhận thông tin mới nhất từ chúng tôi
+                  </p>
+                </div>
+                <form className="form-ground">
+                  <input
+                    type="email"
+                    className="form-ground-input"
+                    placeholder="Nhập email của bạn"
+                  />
+                  <button className="form-ground-btn">
+                    <span>ĐĂNG KÝ</span>
+                    <i className="fa-solid fa-arrow-right"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="widget-area">
+          <div className="container">
+            <div className="widget-row">
+              <div className="widget-row-col-1">
+                <h3 className="widget-title">Về chúng tôi</h3>
+                <div className="widget-row-col-content">
+                  <p>CountCalo là ........</p>
+                </div>
+                <div className="widget-social">
+                  <div className="widget-social-item">
+                    <a href="">
+                      <i className="fab fa-facebook-f"></i>
+                    </a>
+                  </div>
+                  <div className="widget-social-item">
+                    <a href="">
+                      <i className="fab fa-twitter"></i>
+                    </a>
+                  </div>
+                  <div className="widget-social-item">
+                    <a href="">
+                      <i className="fab fa-linkedin-in"></i>
+                    </a>
+                  </div>
+                  <div className="widget-social-item">
+                    <a href="">
+                      <i className="fab fa-whatsapp"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="widget-row-col">
+                <h3 className="widget-title">Liên kết</h3>
+                <ul className="widget-contact">
+                  <li className="widget-contact-item">
+                    <a href="">
+                      <i className="fa-regular fa-arrow-right"></i>
+                      <span>Về chúng tôi</span>
+                    </a>
+                  </li>
+                  <li className="widget-contact-item">
+                    <a href="">
+                      <i className="fa-regular fa-arrow-right"></i>
+                      <span>Thực đơn</span>
+                    </a>
+                  </li>
+                  <li className="widget-contact-item">
+                    <a href="">
+                      <i className="fa-regular fa-arrow-right"></i>
+                      <span>Điều khoản</span>
+                    </a>
+                  </li>
+                  <li className="widget-contact-item">
+                    <a href="">
+                      <i className="fa-regular fa-arrow-right"></i>
+                      <span>Liên hệ</span>
+                    </a>
+                  </li>
+                  <li className="widget-contact-item">
+                    <a href="">
+                      <i className="fa-regular fa-arrow-right"></i>
+                      <span>Tin tức</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div className="widget-row-col">
+                <h3 className="widget-title">Thực đơn</h3>
+                <ul className="widget-contact">
+                  <li className="widget-contact-item">
+                    <a href="">
+                      <i className="fa-regular fa-arrow-right"></i>
+                      <span>Điểm tâm</span>
+                    </a>
+                  </li>
+                  <li className="widget-contact-item">
+                    <a href="">
+                      <i className="fa-regular fa-arrow-right"></i>
+                      <span>Món chay</span>
+                    </a>
+                  </li>
+                  <li className="widget-contact-item">
+                    <a href="">
+                      <i className="fa-regular fa-arrow-right"></i>
+                      <span>Món mặn</span>
+                    </a>
+                  </li>
+                  <li className="widget-contact-item">
+                    <a href="">
+                      <i className="fa-regular fa-arrow-right"></i>
+                      <span>Nước uống</span>
+                    </a>
+                  </li>
+                  <li className="widget-contact-item">
+                    <a href="">
+                      <i className="fa-regular fa-arrow-right"></i>
+                      <span>Tráng miệng</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div className="widget-row-col-1">
+                <h3 className="widget-title">Liên hệ</h3>
+                <div className="contact">
+                  <div className="contact-item">
+                    <div className="contact-item-icon">
+                      <i className="fa-regular fa-location-dot"></i>
+                    </div>
+                    <div className="contact-content">
+                      <span>
+                        20/9 Trần Văn Ơn, Nguyễn Văn Cừ, Thành Phố Quy Nhơn
+                      </span>
+                    </div>
+                  </div>
+                  <div className="contact-item">
+                    <div className="contact-item-icon">
+                      <i className="fa-regular fa-phone"></i>
+                    </div>
+                    <div className="contact-content contact-item-phone">
+                      <span>0332766193</span>
+                      {/* <br />
+                    <span>0987 654 321</span> */}
+                    </div>
+                  </div>
+                  <div className="contact-item">
+                    <div className="contact-item-icon">
+                      <i className="fa-regular fa-envelope"></i>
+                    </div>
+                    <div className="contact-content conatct-item-email">
+                      <span>tungccvv111@gmail.com</span>
+                      <br />
+                      {/* <span>infoabc@domain.com</span> */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

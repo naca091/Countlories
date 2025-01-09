@@ -1,11 +1,11 @@
 import React from "react";
 import { Card, Button } from "antd";
 import { UnlockOutlined } from "@ant-design/icons";
-
 const MenuCard = ({ menu, onSeeMenu }) => (
   <Card
     className="hover:shadow-lg transition-shadow max-w-[320px] p-4 flex" // Flex để bố trí hình ảnh và nội dung
     style={{
+      width: "18rem",
       borderRadius: "8px",
     }}
   >
@@ -23,7 +23,7 @@ const MenuCard = ({ menu, onSeeMenu }) => (
         className="absolute top-0 left-0 w-full h-full object-cover"
         onError={(e) => {
           e.target.onerror = null;
-          e.target.src = "/api/placeholder/50/50"; // Placeholder cho kích thước 200x300
+          // e.target.src = "/api/placeholder/50/50"; // Placeholder cho kích thước 200x300
         }}
       />
     </div>

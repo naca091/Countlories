@@ -35,7 +35,7 @@ const MenuDetailModal = ({ menu, visible, onClose }) => {
             className="w-full h-full object-cover"
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = "/api/placeholder/800/400";
+              // e.target.src = "/api/placeholder/800/400";
             }}
           />
         </div>

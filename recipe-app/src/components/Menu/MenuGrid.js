@@ -1,8 +1,14 @@
-import React from 'react';
-import {  Pagination } from 'antd';
-import MenuCard from './MenuCard';
+import React from "react";
+import { Pagination } from "antd";
+import MenuCard from "./MenuCard";
 
-const MenuGrid = ({ menus, currentPage, menusPerPage, onPageChange, onSeeMenu }) => {
+const MenuGrid = ({
+  menus,
+  currentPage,
+  menusPerPage,
+  onPageChange,
+  onSeeMenu,
+}) => {
   const indexOfLastMenu = currentPage * menusPerPage;
   const indexOfFirstMenu = indexOfLastMenu - menusPerPage;
   const currentMenus = menus.slice(indexOfFirstMenu, indexOfLastMenu);
