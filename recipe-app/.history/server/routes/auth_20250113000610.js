@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
-const { User, Role } = require('../models/models');
+const { User } = require('../models/models');
 
 // Thêm JWT_SECRET trực tiếp
 const JWT_SECRET = "71917999b687ce0c5cc3fb267d1f3c99c29497ad1d63bc8ae4d50a245c19ef15";
@@ -89,65 +89,4 @@ router.post('/logout', (req, res) => {
       message: 'Logged out successfully.',
   });
 });
-
-//register 
-router.post('/register', async (req, res) => {
-  const { username, password, email, fullName, phone, address, xu =0 } = req.body;
-
-  try {
-      if (!username || !password || !email || !fullName) {
-          return res.status(400).json({
-              success: false,
-              message: 'All required fields must be provided',
-          });
-      }
-
-      // Kiểm tra người dùng tồn tại
-      const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-      if (existingUser) {
-          return res.status(400).json({
-              success: false,
-              message: 'Username or email already exists',
-          });
-      }
-
-      // Tìm role với id = 1
-      const memberRole = await Role.findOne({ id: 1 });
-      if (!memberRole) {
-          console.error('Role with id: 1 not found');
-          return res.status(500).json({
-              success: false,
-              message: 'System initialization in progress. Please try again later.',
-          });
-      }
-
-      // Tạo người dùng mới
-      const newUser = new User({
-          username,
-          password, // Không mã hóa mật khẩu
-          email,
-          fullName,
-          phone: phone || '',
-          address: address || '',
-          xu, // Giá trị mặc định cho xu
-          role: memberRole._id, // Gắn role từ roleId
-      });
-
-      await newUser.save();
-
-      res.status(201).json({
-          success: true,
-          message: 'Registration successful! Please login to continue.',
-      });
-  } catch (error) {
-      console.error('Registration error:', error);
-
-      res.status(500).json({
-          success: false,
-          message: error.message || 'Registration failed. Please try again later.',
-      });
-  }
-});
-
-
 module.exports = router;

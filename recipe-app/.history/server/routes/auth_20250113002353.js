@@ -92,7 +92,7 @@ router.post('/logout', (req, res) => {
 
 //register 
 router.post('/register', async (req, res) => {
-  const { username, password, email, fullName, phone, address, xu =0 } = req.body;
+  const { username, password, email, fullName, phone, address } = req.body;
 
   try {
       if (!username || !password || !email || !fullName) {
@@ -114,7 +114,6 @@ router.post('/register', async (req, res) => {
       // Tìm role với id = 1
       const memberRole = await Role.findOne({ id: 1 });
       if (!memberRole) {
-          console.error('Role with id: 1 not found');
           return res.status(500).json({
               success: false,
               message: 'System initialization in progress. Please try again later.',
@@ -129,7 +128,6 @@ router.post('/register', async (req, res) => {
           fullName,
           phone: phone || '',
           address: address || '',
-          xu, // Giá trị mặc định cho xu
           role: memberRole._id, // Gắn role từ roleId
       });
 
@@ -144,10 +142,9 @@ router.post('/register', async (req, res) => {
 
       res.status(500).json({
           success: false,
-          message: error.message || 'Registration failed. Please try again later.',
+          message: 'Registration failed. Please try again later.',
       });
   }
 });
-
 
 module.exports = router;

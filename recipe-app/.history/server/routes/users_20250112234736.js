@@ -249,7 +249,7 @@ router.delete('/api/users/:userId', async (req, res) => {
 });
 
 // User Registration Route
-/*router.post('/api/users/register', async (req, res) => {
+router.post('api/users/register', async (req, res) => {
     const { username, password, email, fullName, phone, address } = req.body;
 
     try {
@@ -322,7 +322,7 @@ router.delete('/api/users/:userId', async (req, res) => {
     }
 });
 
-
+/*
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
   

@@ -92,7 +92,7 @@ router.post('/logout', (req, res) => {
 
 //register 
 router.post('/register', async (req, res) => {
-  const { username, password, email, fullName, phone, address, xu =0 } = req.body;
+  const { username, password, email, fullName, phone, address } = req.body;
 
   try {
       if (!username || !password || !email || !fullName) {
@@ -129,7 +129,6 @@ router.post('/register', async (req, res) => {
           fullName,
           phone: phone || '',
           address: address || '',
-          xu, // Giá trị mặc định cho xu
           role: memberRole._id, // Gắn role từ roleId
       });
 

@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
-const { User, Role } = require('../models/models');
+const { User } = require('../models/models');
 
 // Thêm JWT_SECRET trực tiếp
 const JWT_SECRET = "71917999b687ce0c5cc3fb267d1f3c99c29497ad1d63bc8ae4d50a245c19ef15";
@@ -92,9 +92,10 @@ router.post('/logout', (req, res) => {
 
 //register 
 router.post('/register', async (req, res) => {
-  const { username, password, email, fullName, phone, address, xu =0 } = req.body;
+  const { username, password, email, fullName, phone, address, xu = 0 } = req.body;
 
   try {
+      // Kiểm tra input đầu vào
       if (!username || !password || !email || !fullName) {
           return res.status(400).json({
               success: false,
@@ -102,7 +103,7 @@ router.post('/register', async (req, res) => {
           });
       }
 
-      // Kiểm tra người dùng tồn tại
+      // Kiểm tra xem username hoặc email đã tồn tại chưa
       const existingUser = await User.findOne({ $or: [{ email }, { username }] });
       if (existingUser) {
           return res.status(400).json({
@@ -111,26 +112,32 @@ router.post('/register', async (req, res) => {
           });
       }
 
-      // Tìm role với id = 1
-      const memberRole = await Role.findOne({ id: 1 });
+      // Tìm role cho member (roleId = 1) với cơ chế retry
+      let memberRole;
+      for (let i = 0; i < 3; i++) { // Thử tối đa 3 lần
+          memberRole = await Role.findOne({ roleId: 1 });
+          if (memberRole) break;
+          await new Promise(resolve => setTimeout(resolve, 1000)); // Chờ 1 giây trước khi thử lại
+      }
+
       if (!memberRole) {
-          console.error('Role with id: 1 not found');
           return res.status(500).json({
               success: false,
               message: 'System initialization in progress. Please try again later.',
           });
       }
 
-      // Tạo người dùng mới
+      // Tạo người dùng mới (không hash mật khẩu)
       const newUser = new User({
           username,
-          password, // Không mã hóa mật khẩu
+          password, // Lưu mật khẩu trực tiếp (không hash)
           email,
           fullName,
           phone: phone || '',
           address: address || '',
+          role: memberRole._id, // Sử dụng role được tìm thấy
           xu, // Giá trị mặc định cho xu
-          role: memberRole._id, // Gắn role từ roleId
+          avatar: '', // Giá trị mặc định cho avatar
       });
 
       await newUser.save();
@@ -142,12 +149,20 @@ router.post('/register', async (req, res) => {
   } catch (error) {
       console.error('Registration error:', error);
 
+      // Xử lý lỗi Validation
+      if (error.name === 'ValidationError') {
+          const errors = Object.values(error.errors).map(err => err.message);
+          return res.status(400).json({
+              success: false,
+              message: errors.join(', '),
+          });
+      }
+
       res.status(500).json({
           success: false,
-          message: error.message || 'Registration failed. Please try again later.',
+          message: 'Registration failed. Please try again later.',
       });
   }
 });
-
 
 module.exports = router;

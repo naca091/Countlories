@@ -68,7 +68,7 @@ const Homepage = () => {
         localStorage.removeItem('token'); // Xóa thông tin người dùng từ localStorage
         navigate('/login'); // Điều hướng về trang đăng nhập
     };
-
+    
     const handleMenuClick = (menu) => {
         setSelectedMenu(menu);
         setIsModalVisible(true);
@@ -94,9 +94,6 @@ const Homepage = () => {
             <div>
                 <strong>User: {userEmail}</strong>
                 <strong>Balance: {userXu} xu</strong>
-                <Button type="primary" danger onClick={handleLogout}>
-                    Logout
-                </Button>
             </div>
             <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Input.Search
