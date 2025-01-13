@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Form, Input, Button, Card, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
     const [loading, setLoading] = useState(false);
@@ -103,6 +103,9 @@ const Login = () => {
                             Log in
                         </Button>
                     </Form.Item>
+                    <div style={{ textAlign: 'center' }}>
+                        <Link to="/user/resetpassword">Forgot Password?</Link>
+                    </div>
                 </Form>
             </Card>
         </div>

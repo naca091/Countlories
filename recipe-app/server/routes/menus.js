@@ -10,7 +10,7 @@ const mongoose = require('mongoose'); // Thêm mongoose import
 // Cấu hình multer để lưu file vào thư mục "uploads"
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "../uploads")); // Đường dẫn tuyệt đối đến thư mục uploads
+    cb(null, path.join(__dirname, "../uploads")); 
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname)); // Tạo tên file duy nhất

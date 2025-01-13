@@ -12,6 +12,8 @@ const menuRouter = require('./routes/menus');
 const roleRouter = require('./routes/roles');  
 const userRouter = require('./routes/users');  
 const authRoutes = require('./routes/auth');
+const resetPasswordRoutes = require('./routes/resetPassword');
+const videoRoutes = require('./routes/videoRoutes');
 
 dotenv.config();  
 
@@ -48,6 +50,11 @@ app.use(menuRouter);
 app.use(roleRouter);  
 app.use(userRouter);  
 app.use('/api/auth', authRoutes);  
+app.use('/api/auth', resetPasswordRoutes);
+app.use('/uploads', express.static('uploads'));
+app.use('/api/videos', videoRoutes);
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Error handling middleware  
 app.use((err, req, res, next) => {

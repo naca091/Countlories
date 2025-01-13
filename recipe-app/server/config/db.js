@@ -88,7 +88,11 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Menu'
     }
-  }]
+  }],
+  rewardedVideos: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Video'
+}],
 }); ({ 
   timestamps: true,
   toJSON: { virtuals: true },
@@ -217,20 +221,24 @@ const menuSchema = new mongoose.Schema({
   toObject: { virtuals: true }  
 });
 
-// UserMenu Schema
-const userMenuSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+// video Schema
+const videoSchema = new mongoose.Schema({
+  title: {
+      type: String,
+      required: true,
+      trim: true
   },
-  menuId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Menu',
-    required: true
-  }
-}, {
-  timestamps: true
+  videoPath: {
+      type: String,
+      required: true
+  },
+  uploadDate: {
+      type: Date,
+      default: Date.now
+  },
+  timestamps: true,  
+  toJSON: { virtuals: true },  
+  toObject: { virtuals: true }  
 });
 
 // User Methods
@@ -280,7 +288,7 @@ const User = mongoose.model('User', userSchema);
 const Ingredient = mongoose.model('Ingredient', ingredientSchema);
 const Category = mongoose.model('Category', categorySchema);
 const Menu = mongoose.model('Menu', menuSchema);
-const UserMenu = mongoose.model('UserMenu', userMenuSchema);
+const Video = mongoose.model('Video', videoSchema);
 
 module.exports = {
   Role,
@@ -288,5 +296,5 @@ module.exports = {
   Ingredient,
   Category,
   Menu,
-  UserMenu
+  Video
 };

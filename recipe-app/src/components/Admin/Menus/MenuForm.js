@@ -60,9 +60,9 @@ const MenuForm = ({ visible, onCancel, onSuccess, initialValues }) => {
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
-      
+
       let imageUrl = values.image;
-      
+
       // Kiểm tra xem có file mới được upload không
       if (fileList.length > 0 && fileList[0].originFileObj) {
         const formData = new FormData();
@@ -155,67 +155,71 @@ const MenuForm = ({ visible, onCancel, onSuccess, initialValues }) => {
 
         {/* Ingredients */}
         <Form.List name="ingredients">
-          {(fields, { add, remove }) => (
-            <>
-              {fields.map(({ key, name, ...restField }) => (
-                <Space key={key} style={{ display: "flex", marginBottom: 8 }}>
-                  {/* Ingredient Dropdown */}
-                  <Form.Item
-                    {...restField}
-                    name={[name, "ingredient"]}
-                    label="Ingredient"
-                    rules={[
-                      { required: true, message: "Please select an ingredient!" },
-                    ]}
-                  >
-                    <Select placeholder="Select an ingredient">
-                      {ingredients.map((ing) => (
-                        <Option key={ing._id} value={ing._id}>
-                          {ing.name}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-
-                  {/* Weight */}
-                  <Form.Item
-                    {...restField}
-                    name={[name, "weight"]}
-                    label="Weight"
-                    rules={[
-                      { required: true, message: "Please input the weight!" },
-                    ]}
-                  >
-                    <InputNumber min={0} />
-                  </Form.Item>
-
-                  {/* Unit */}
-                  <Form.Item
-                    {...restField}
-                    name={[name, "unit"]}
-                    label="Unit"
-                    rules={[
-                      { required: true, message: "Please input the unit!" },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  {/* Remove Button */}
-                  <Button type="link" onClick={() => remove(name)}>
-                    Remove
-                  </Button>
-                </Space>
+  {(fields, { add, remove }) => (
+    <>
+      {fields.map(({ key, name, ...restField }) => (
+        <Space key={key} style={{ display: "flex", marginBottom: 8 }}>
+          {/* Ingredient Dropdown with Search */}
+          <Form.Item
+            {...restField}
+            name={[name, "ingredient"]}
+            label="Ingredient"
+            rules={[
+              { required: true, message: "Please select an ingredient!" },
+            ]}
+          >
+            <Select
+              placeholder="Select an ingredient"
+              showSearch
+              filterOption={(input, option) =>
+                option.children.toLowerCase().includes(input.toLowerCase())
+              }
+            >
+              {ingredients.map((ing) => (
+                <Option key={ing._id} value={ing._id}>
+                  {ing.name}
+                </Option>
               ))}
-              {/* Add Button */}
-              <Form.Item>
-                <Button type="dashed" onClick={() => add()} block>
-                  Add Ingredient
-                </Button>
-              </Form.Item>
-            </>
-          )}
-        </Form.List>
+            </Select>
+          </Form.Item>
+
+          {/* Weight */}
+          <Form.Item
+            {...restField}
+            name={[name, "weight"]}
+            label="Weight"
+            rules={[{ required: true, message: "Please input the weight!" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+
+          {/* Unit */}
+          <Form.Item
+            {...restField}
+            name={[name, "unit"]}
+            label="Unit"
+            rules={[{ required: true, message: "Please input the unit!" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          {/* Remove Button */}
+          <Button type="link" onClick={() => remove(name)}>
+            Remove
+          </Button>
+        </Space>
+      ))}
+      {/* Add Button */}
+      <Form.Item>
+        <Button type="dashed" onClick={() => add()} block>
+          Add Ingredient
+        </Button>
+      </Form.Item>
+    </>
+  )}
+</Form.List>
+
+
 
         {/* Description */}
         <Form.Item name="description" label="Description">
@@ -224,20 +228,20 @@ const MenuForm = ({ visible, onCancel, onSuccess, initialValues }) => {
 
         {/* Cooking Time */}
         <Form.Item
-  name="cookingTimePrep"
-  label="Preparation Time (minutes)"
-  rules={[{ required: true, message: "Please input preparation time!" }]}
->
-  <InputNumber min={0} />
-</Form.Item>
+          name="cookingTimePrep"
+          label="Preparation Time (minutes)"
+          rules={[{ required: true, message: "Please input preparation time!" }]}
+        >
+          <InputNumber min={0} />
+        </Form.Item>
 
-<Form.Item
-  name="cookingTimeCook"
-  label="Cooking Time (minutes)"
-  rules={[{ required: true, message: "Please input cooking time!" }]}
->
-  <InputNumber min={0} />
-</Form.Item>
+        <Form.Item
+          name="cookingTimeCook"
+          label="Cooking Time (minutes)"
+          rules={[{ required: true, message: "Please input cooking time!" }]}
+        >
+          <InputNumber min={0} />
+        </Form.Item>
 
         {/* Difficulty */}
         <Form.Item

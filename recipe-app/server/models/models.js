@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt'); // thay vì 'bcryptjs'
 const dotenv = require("dotenv");
 require('dotenv').config({ path: 'ENV_FILENAME' });
 const jwt = require('jsonwebtoken');  
+const { Video } = require('lucide-react');
 const JWT_SECRET = 5234523452345;
 dotenv.config();
 
@@ -93,7 +94,11 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Menu'
     }
-  }]
+  }],
+  rewardedVideos: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Video'
+}],
 }); ({ 
   timestamps: true,
   toJSON: { virtuals: true },
@@ -250,6 +255,24 @@ const userMenuSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+//Video Schema 
+// video Schema
+const videoSchema = new mongoose.Schema({
+  title: {
+      type: String,
+      required: true,
+      trim: true
+  },
+  videoPath: {
+      type: String,
+      required: true
+  },
+  uploadDate: {
+      type: Date,
+      default: Date.now
+  },
+});
 // Middleware để cập nhật rating trung bình của menu
 userMenuSchema.post('save', async function(doc) {
   if (doc.rating && doc.rating.score) {
@@ -286,5 +309,6 @@ module.exports = {
   Ingredient: mongoose.model('Ingredient', ingredientSchema),
   Category: mongoose.model('Category', categorySchema),
   Menu: mongoose.model('Menu', menuSchema),
-  UserMenu: mongoose.model('UserMenu', userMenuSchema)
+  UserMenu: mongoose.model('UserMenu', userMenuSchema),
+  Video: mongoose.model('Video', videoSchema),
 };
