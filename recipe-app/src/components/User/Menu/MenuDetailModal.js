@@ -4,6 +4,7 @@ import { Modal, Button, message, Skeleton } from "antd";
 import { UnlockOutlined, LockOutlined } from "@ant-design/icons";
 import axios from "axios";
 
+
 const MenuDetailModal = ({
   menu,
   visible,

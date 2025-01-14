@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Card, Col, Row, Spin, message, Input, Button } from "antd";
+import { Row, Col, Spin, Card, Carousel, message } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import MenuDetailModal from "./Menu/MenuDetailModal";
+import Header from "./header";
+import Footer from "./footer";
+import banner1 from "./images/banner1.jpg";
+import banner2 from "./images/banner2.png";
+import banner3 from "./images/banner3.png";
+import banner4 from "./images/banner4.png";
+import "./fontend/homepage.css";
 
 const Homepage = () => {
   const navigate = useNavigate();
@@ -18,33 +25,9 @@ const Homepage = () => {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userXu, setUserXu] = useState(initialUserXu);
-  const [user, setUser] = useState({}); // Lưu thông tin người dùng
   const [purchasedMenus, setPurchasedMenus] = useState([]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (token) {
-          const response = await axios.get(
-            "http://localhost:5000/api/auth/me",
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          if (response.data.success) {
-            setUser(response.data.user);
-            setUserXu(response.data.user.xu);
-            setPurchasedMenus(
-              response.data.user.purchasedMenus.map((pm) => pm.menuId)
-            );
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
     const fetchMenus = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/menus");
@@ -53,29 +36,13 @@ const Homepage = () => {
           setFilteredMenus(response.data.data);
         }
       } catch (error) {
-        console.error("Error fetching menus:", error);
         message.error("Failed to load menus");
       } finally {
         setLoading(false);
       }
     };
-
-    fetchUserData();
     fetchMenus();
   }, []);
-
-  const handleSearch = (value) => {
-    const searchValue = value.toLowerCase();
-    const filtered = menus.filter((menu) =>
-      menu.name.toLowerCase().includes(searchValue)
-    );
-    setFilteredMenus(filtered);
-  };
-  //logout function
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Xóa thông tin người dùng từ localStorage
-    navigate("/login"); // Điều hướng về trang đăng nhập
-  };
 
   const handleMenuClick = (menu) => {
     setSelectedMenu(menu);
@@ -92,42 +59,28 @@ const Homepage = () => {
     setPurchasedMenus([...purchasedMenus, menuId]);
   };
 
-  const navigateToProfile = () => {
-    navigate("/user/profile", { state: { user } });
-  };
+  const bannerImages = [banner1, banner2, banner3, banner4];
 
   return (
-    <div className="homepage">
-      <h1>Menu List</h1>
-      <div>
-        <strong>User: {userEmail}</strong>
-        <strong>Balance: {userXu} xu</strong>
-        <Button type="primary" danger onClick={handleLogout}>
-          Logout
-        </Button>
-      </div>
-      <div
-        style={{
-          marginBottom: 20,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Input.Search
-          placeholder="Search menu by name"
-          onSearch={handleSearch}
-          enterButton
-          style={{ width: "60%" }}
-        />
-        <div>
-          <strong>Balance: {userXu} xu</strong>
-        </div>
-        <Button type="primary" onClick={navigateToProfile}>
-          Go to Profile
-        </Button>
-      </div>
-
+    <div>
+      <Header
+        userEmail={userEmail}
+        userXu={userXu}
+        navigateToProfile={() => navigate("/user/profile")}
+        handleLogout={() => navigate("/login")}
+      />
+      <Carousel autoplay className="rounded-lg overflow-hidden carousel">
+        {bannerImages.map((image, index) => (
+          <div key={index}>
+            <img
+              src={image}
+              alt={`Banner ${index + 1}`}
+              className="rounded-lg"
+            />
+          </div>
+        ))}
+      </Carousel>
+      <div className="banner-line"></div>
       {loading ? (
         <Spin size="large" />
       ) : (
@@ -139,10 +92,10 @@ const Homepage = () => {
                 cover={
                   <img
                     alt={menu.name}
-                    src={`http://localhost:5000${menu.image}`} // Đường dẫn đầy đủ
+                    src={`http://localhost:5000${menu.image}`}
                     onError={(e) => {
-                      e.target.onerror = null; // Ngăn lặp lỗi
-                      e.target.src = "/placeholder.jpg"; // Đường dẫn ảnh thay thế
+                      e.target.onerror = null;
+                      e.target.src = "/placeholder.jpg";
                     }}
                   />
                 }
@@ -162,7 +115,6 @@ const Homepage = () => {
           ))}
         </Row>
       )}
-
       {selectedMenu && (
         <MenuDetailModal
           menu={selectedMenu}
@@ -173,6 +125,7 @@ const Homepage = () => {
           onPurchaseSuccess={handlePurchaseSuccess}
         />
       )}
+      <Footer />
     </div>
   );
 };
