@@ -11,7 +11,7 @@ const JWT_SECRET = "71917999b687ce0c5cc3fb267d1f3c99c29497ad1d63bc8ae4d50a245c19
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email }).populate('role');
+    const user = await User.findOne({ email });
     if (!user || user.password !== password) {
       return res.status(401).json({
         success: false,
@@ -20,7 +20,7 @@ router.post('/login', async (req, res) => {
     }
     
     const token = jwt.sign(
-      { userId: user._id, roleId: user.role.id },
+      { userId: user._id },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
@@ -30,8 +30,7 @@ router.post('/login', async (req, res) => {
       message: 'Login successful',
       token,
       userEmail: user.email,
-      userxu: user.xu,
-      roleId: user.role.id
+      userxu: user.xu
     });
   } catch (error) {
     console.error('Login Error:', error);

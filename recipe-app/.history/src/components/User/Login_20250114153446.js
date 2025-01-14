@@ -1,3 +1,4 @@
+// Login.js
 import React, { useState } from 'react';
 import { Form, Input, Button, Card, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
@@ -17,30 +18,16 @@ const Login = () => {
             });
 
             if (response.data.success) {
-                // Lưu token vào localStorage
-                localStorage.setItem('token', response.data.token);
-
-                message.success('Login successful!');
-
-                // Điều hướng dựa trên vai trò người dùng
-                const { roleId } = response.data;
-                if (roleId === 1) {
-                    navigate('/user/homepage', {
-                        state: {
-                            userEmail: response.data.userEmail,
-                            userxu: response.data.userxu
-                        }
-                    });
+                const roleId = response.data.roleId;
+                if (roleId === 1 || roleId === 3) {
+                    navigate('/user/homepage');
                 } else if (roleId === 2) {
                     navigate('/admin/dashboard');
-                } else {
-                    message.error('Unauthorized access');
-                    console.log('Role ID:', response.data.roleId);
-
                 }
             } else {
-                message.error(response.data.message || 'Login failed');
+                message.error(response.data.message || 'Login failed.');
             }
+            
         } catch (error) {
             console.error('Login error:', error);
             message.error(error.response?.data?.message || 'Login failed');

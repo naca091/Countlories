@@ -31,12 +31,10 @@ const Login = () => {
                             userxu: response.data.userxu
                         }
                     });
-                } else if (roleId === 2) {
+                } else if (roleId === 3) {
                     navigate('/admin/dashboard');
                 } else {
                     message.error('Unauthorized access');
-                    console.log('Role ID:', response.data.roleId);
-
                 }
             } else {
                 message.error(response.data.message || 'Login failed');

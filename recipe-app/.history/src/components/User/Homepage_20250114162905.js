@@ -88,10 +88,6 @@ const Homepage = () => {
         navigate('/user/profile', { state: { user } });
     };
 
-    const navigateToSeeAds = () => {
-        navigate('/user/see-video   ', { state: { user } });
-    };
-
     return (
         <div className="homepage">
             <h1>Menu List</h1>
@@ -116,9 +112,11 @@ const Homepage = () => {
                     Go to Profile
                 </Button>
 
-                <Button type="primary" onClick={navigateToSeeAds}>
-                    See Video Ads
+                <Link to="/user/profile">Profile
+                <Button type="primary" onClick={navigateToProfile}>
+                    Go to Profile
                 </Button>
+                </Link>
             </div>
 
             {loading ? (

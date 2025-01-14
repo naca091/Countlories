@@ -1,3 +1,4 @@
+// Login.js
 import React, { useState } from 'react';
 import { Form, Input, Button, Card, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
@@ -22,22 +23,13 @@ const Login = () => {
 
                 message.success('Login successful!');
 
-                // Điều hướng dựa trên vai trò người dùng
-                const { roleId } = response.data;
-                if (roleId === 1) {
-                    navigate('/user/homepage', {
-                        state: {
-                            userEmail: response.data.userEmail,
-                            userxu: response.data.userxu
-                        }
-                    });
-                } else if (roleId === 2) {
-                    navigate('/admin/dashboard');
-                } else {
-                    message.error('Unauthorized access');
-                    console.log('Role ID:', response.data.roleId);
-
-                }
+                // Chuyển hướng đến homepage với thông tin user
+                navigate('/user/homepage', {
+                    state: {
+                        userEmail: response.data.userEmail,
+                        userxu: response.data.userxu
+                    }
+                });
             } else {
                 message.error(response.data.message || 'Login failed');
             }

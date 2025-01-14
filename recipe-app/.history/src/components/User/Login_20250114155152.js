@@ -32,7 +32,7 @@ const Login = () => {
                         }
                     });
                 } else if (roleId === 2) {
-                    navigate('/admin/dashboard');
+                    navigate('/admin/dashboard/dashboard');
                 } else {
                     message.error('Unauthorized access');
                     console.log('Role ID:', response.data.roleId);

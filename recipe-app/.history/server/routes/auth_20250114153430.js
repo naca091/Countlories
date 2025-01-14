@@ -10,35 +10,54 @@ const JWT_SECRET = "71917999b687ce0c5cc3fb267d1f3c99c29497ad1d63bc8ae4d50a245c19
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email }).populate('role');
-    if (!user || user.password !== password) {
-      return res.status(401).json({
-        success: false,
-        message: 'Email or password is incorrect',
-      });
-    }
-    
-    const token = jwt.sign(
-      { userId: user._id, roleId: user.role.id },
-      JWT_SECRET,
-      { expiresIn: '24h' }
-    );
 
-    res.json({
-      success: true,
-      message: 'Login successful',
-      token,
-      userEmail: user.email,
-      userxu: user.xu,
-      roleId: user.role.id
-    });
+  try {
+      // Tìm người dùng theo email
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+          return res.status(404).json({
+              success: false,
+              message: 'User not found.'
+          });
+      }
+
+      // Kiểm tra mật khẩu
+      const isPasswordValid = password === user.password; // Không hash password theo yêu cầu của bạn
+      if (!isPasswordValid) {
+          return res.status(401).json({
+              success: false,
+              message: 'Invalid password.'
+          });
+      }
+
+      // Kiểm tra role
+      if (![1, 2, 3].includes(user.roleId)) {
+          return res.status(400).json({
+              success: false,
+              message: 'Invalid role. Please contact support.'
+          });
+      }
+
+      // Tạo JWT token
+      const token = jwt.sign(
+          { userId: user.id, roleId: user.roleId },
+          process.env.JWT_SECRET,
+          { expiresIn: '1h' }
+      );
+
+      res.json({
+          success: true,
+          token,
+          roleId: user.roleId,
+          userEmail: user.email,
+          userxu: user.xu // Assuming "xu" is a field in the user model
+      });
   } catch (error) {
-    console.error('Login Error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'An error occurred during login'
-    });
+      console.error('Login error:', error);
+      res.status(500).json({
+          success: false,
+          message: 'Server error. Please try again later.'
+      });
   }
 });
 

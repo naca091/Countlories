@@ -89,7 +89,7 @@ const Homepage = () => {
     };
 
     const navigateToSeeAds = () => {
-        navigate('/user/see-video   ', { state: { user } });
+        navigate('/user/profile', { state: { user } });
     };
 
     return (
@@ -116,9 +116,7 @@ const Homepage = () => {
                     Go to Profile
                 </Button>
 
-                <Button type="primary" onClick={navigateToSeeAds}>
-                    See Video Ads
-                </Button>
+
             </div>
 
             {loading ? (

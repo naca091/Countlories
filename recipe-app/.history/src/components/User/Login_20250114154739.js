@@ -24,23 +24,19 @@ const Login = () => {
 
                 // Điều hướng dựa trên vai trò người dùng
                 const { roleId } = response.data;
-                if (roleId === 1) {
+                if (Number(roleId) === 1) {
                     navigate('/user/homepage', {
                         state: {
                             userEmail: response.data.userEmail,
                             userxu: response.data.userxu
                         }
                     });
-                } else if (roleId === 2) {
+                } else if (Number(roleId) === 3) {
                     navigate('/admin/dashboard');
                 } else {
                     message.error('Unauthorized access');
-                    console.log('Role ID:', response.data.roleId);
-
                 }
-            } else {
-                message.error(response.data.message || 'Login failed');
-            }
+                
         } catch (error) {
             console.error('Login error:', error);
             message.error(error.response?.data?.message || 'Login failed');

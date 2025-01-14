@@ -9,7 +9,6 @@ import {
   VideoCameraAddOutlined,
   CaretDownOutlined
 } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
 import CategoryList from '../Categories/CategoryList';
 import IngredientList from '../Ingredients/IngredientList';
 import MenuList from '../Menus/MenuList';
@@ -22,15 +21,8 @@ const { Sider, Content } = Layout;
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState('1');
   const [collapsed, setCollapsed] = useState(false);
-  const navigate = useNavigate();
 
-  // Chức năng logout
-  const handleLogout = () => {
-    localStorage.removeItem('token'); // Xóa token từ localStorage
-    navigate('/login'); // Điều hướng về trang đăng nhập
-  };
-
-  // Render nội dung dựa trên menu được chọn
+  // Render content based on selected menu
   const renderContent = () => {
     switch (selectedMenu) {
       case '1':
@@ -46,11 +38,7 @@ const AdminDashboard = () => {
       case '6':
         return <VideoList />;
       default:
-        return (
-          <div className="p-6">
-            <h1 className="text-2xl font-bold">Dashboard Overview</h1>
-          </div>
-        );
+        return <div className="p-6"><h1 className="text-2xl font-bold">Dashboard Overview</h1></div>;
     }
   };
 
@@ -104,15 +92,13 @@ const AdminDashboard = () => {
           boxShadow: '2px 0 8px 0 rgba(29,35,41,.05)'
         }}
       >
-        <div
-          style={{
-            height: '64px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderBottom: '1px solid #f0f0f0'
-          }}
-        >
+        <div style={{
+          height: '64px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderBottom: '1px solid #f0f0f0'
+        }}>
           <h1 className={`text-xl font-bold ${collapsed ? 'hidden' : 'block'}`}>
             Admin Panel
           </h1>
@@ -126,25 +112,11 @@ const AdminDashboard = () => {
           onClick={({ key }) => setSelectedMenu(key)}
         />
       </Sider>
-      <Layout
-        style={{ marginLeft: collapsed ? 80 : 200, transition: 'all 0.2s' }}
-      >
-        <Content
-          style={{
-            margin: '24px 16px',
-            padding: 24,
-            background: '#fff',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px'
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <h2>Welcome to Admin Dashboard</h2>
-            <Button type="primary" danger onClick={handleLogout}>
-              Logout
-            </Button>
-          </div>
+
+
+      
+      <Layout style={{ marginLeft: collapsed ? 80 : 200, transition: 'all 0.2s' }}>
+        <Content style={{ margin: '24px 16px', padding: 24, background: '#fff' }}>
           {renderContent()}
         </Content>
       </Layout>

@@ -31,8 +31,8 @@ const Login = () => {
                             userxu: response.data.userxu
                         }
                     });
-                } else if (roleId === 2) {
-                    navigate('/admin/dashboard');
+                } else if (roleId === 3) {
+                    navigate('/admin/dashboard/dashboard');
                 } else {
                     message.error('Unauthorized access');
                     console.log('Role ID:', response.data.roleId);

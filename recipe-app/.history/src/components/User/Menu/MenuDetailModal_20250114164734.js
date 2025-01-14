@@ -78,7 +78,7 @@ const MenuDetailModal = ({
         if (!menu) return <Skeleton active />;
 
         return isUnlocked ? (
-            <div> 
+            <div>
                 <img
                     src={menu.imageUrl}
                     alt={menu.name}
@@ -188,4 +188,5 @@ const MenuDetailModal = ({
         </Modal>
     );
 };
+
 export default MenuDetailModal;

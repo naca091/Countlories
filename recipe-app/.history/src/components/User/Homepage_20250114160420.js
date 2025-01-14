@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, Col, Row, Spin, message, Input, Button } from 'antd';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import MenuDetailModal from './Menu/MenuDetailModal';
 
 const Homepage = () => {
@@ -88,10 +88,6 @@ const Homepage = () => {
         navigate('/user/profile', { state: { user } });
     };
 
-    const navigateToSeeAds = () => {
-        navigate('/user/see-video   ', { state: { user } });
-    };
-
     return (
         <div className="homepage">
             <h1>Menu List</h1>
@@ -114,10 +110,6 @@ const Homepage = () => {
                 </div>
                 <Button type="primary" onClick={navigateToProfile}>
                     Go to Profile
-                </Button>
-
-                <Button type="primary" onClick={navigateToSeeAds}>
-                    See Video Ads
                 </Button>
             </div>
 

@@ -5,13 +5,13 @@ import { UnlockOutlined, LockOutlined } from '@ant-design/icons';
 
 import axios from 'axios';
 
-const MenuDetailModal = ({
-    menu,
-    visible,
-    onClose,
+const MenuDetailModal = ({ 
+    menu, 
+    visible, 
+    onClose, 
     userXu,
     purchasedMenus,
-    onPurchaseSuccess
+    onPurchaseSuccess 
 }) => {
     const [loading, setLoading] = useState(false);
     const [isUnlocked, setIsUnlocked] = useState(false);
@@ -19,7 +19,7 @@ const MenuDetailModal = ({
     useEffect(() => {
         if (menu) {
             setIsUnlocked(
-                menu.defaultStatus === 'unlock' ||
+                menu.defaultStatus === 'unlock' || 
                 purchasedMenus.includes(menu._id)
             );
         }
@@ -30,17 +30,17 @@ const MenuDetailModal = ({
             message.error('Invalid menu');
             return;
         }
-
+    
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
-
+            
             // Make sure token exists
             if (!token) {
                 message.error('Please login first');
                 return;
             }
-
+    
             const response = await axios.post(
                 `http://localhost:5000/api/menus/${menu._id}/purchase`,
                 {}, // empty body
@@ -51,7 +51,7 @@ const MenuDetailModal = ({
                     }
                 }
             );
-
+    
             if (response.data.success) { // Check for success flag
                 message.success('Menu unlocked successfully!');
                 setIsUnlocked(true);
@@ -78,65 +78,19 @@ const MenuDetailModal = ({
         if (!menu) return <Skeleton active />;
 
         return isUnlocked ? (
-            <div> 
-                <img
-                    src={menu.imageUrl}
-                    alt={menu.name}
-                    style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
+            <div>
+                <img 
+                    src={menu.imageUrl} 
+                    alt={menu.name} 
+                    style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }} 
                 />
-                <div className="mt-4">
+                <div className="mt-2">
                     <h3>Description</h3>
                     <p>{menu.description}</p>
                 </div>
-                <div className="mt-4">
-                    <h3>Cooking Time</h3>
-                    <p>Preparation: {menu.cookingTime.prep} minutes</p>
-                    <p>Cooking: {menu.cookingTime.cook} minutes</p>
-                </div>
-                <div className="mt-4">
-                    <h3>Difficulty</h3>
-                    <p>{menu.difficulty.charAt(0).toUpperCase() + menu.difficulty.slice(1)}</p>
-                </div>
-                <div className="mt-4">
-                    <h3>Serving Size</h3>
-                    <p>{menu.servingSize} people</p>
-                </div>
-                <div className="mt-4">
-                    <h3>Calories</h3>
-                    <p>{menu.calories} kcal</p>
-                </div>
-                <div className="mt-4">
-                    <h3>Nutritional Information</h3>
-                    <p>Protein: {menu.nutritionalInfo?.protein || 'N/A'} g</p>
-                    <p>Carbs: {menu.nutritionalInfo?.carbs || 'N/A'} g</p>
-                    <p>Fat: {menu.nutritionalInfo?.fat || 'N/A'} g</p>
-                    <p>Fiber: {menu.nutritionalInfo?.fiber || 'N/A'} g</p>
-                </div>
-                <div className="mt-4">
-                    <h3>Tags</h3>
-                    <p>{menu.tags.join(', ')}</p>
-                </div>
-                <div className="mt-4">
-                    <h3>Category</h3>
-                    <p>{menu.category.name}</p> {/* Assuming category has a name field */}
-                </div>
-                <div className="mt-4">
-                    <h3>Unlock Price</h3>
-                    <p>{menu.unlockPrice} xu</p>
-                </div>
-                <div className="mt-4">
-                    <h3>Average Rating</h3>
-                    <p>{menu.averageRating} / 5 ({menu.ratingCount} ratings)</p>
-                </div>
-                <div className="mt-4">
-                    <h3>Ingredients</h3>
-                    <ul>
-                        {menu.ingredients.map((ingredient, index) => (
-                            <li key={index}>
-                                {ingredient.ingredient.name}: {ingredient.weight} {ingredient.unit}
-                            </li>
-                        ))}
-                    </ul>
+                <div className="mt-2">
+                    <h3>Cooking time</h3>
+                    <p>{menu.description}</p>
                 </div>
             </div>
         ) : (
@@ -144,11 +98,11 @@ const MenuDetailModal = ({
                 <img
                     src={menu.imageUrl}
                     alt={menu.name}
-                    style={{
-                        width: '100%',
-                        maxHeight: '400px',
+                    style={{ 
+                        width: '100%', 
+                        maxHeight: '400px', 
                         objectFit: 'cover',
-                        filter: 'blur(5px)'
+                        filter: 'blur(5px)' 
                     }}
                 />
                 <div style={{ textAlign: 'center', marginTop: '20px' }}>
@@ -188,4 +142,5 @@ const MenuDetailModal = ({
         </Modal>
     );
 };
+
 export default MenuDetailModal;

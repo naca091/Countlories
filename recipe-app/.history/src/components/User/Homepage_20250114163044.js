@@ -119,6 +119,9 @@ const Homepage = () => {
                 <Button type="primary" onClick={navigateToSeeAds}>
                     See Video Ads
                 </Button>
+
+
+
             </div>
 
             {loading ? (
