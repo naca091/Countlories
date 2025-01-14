@@ -34,7 +34,7 @@ const upload = multer({
 });
 
 // Upload video route (admin only)
-router.post('/upload', auth, upload.single('video'), async (req, res) => {
+router.post('/', auth, upload.single('video'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({
@@ -80,7 +80,6 @@ router.get('/videos', auth, async (req, res) => {
     }
 });
 
-// Award XU after watching video
 // Award XU after watching video
 router.post('/award-xu', auth, async (req, res) => {
     try {
@@ -202,6 +201,101 @@ router.get('/stream/:filename', auth, (req, res) => {
         };
         res.writeHead(200, head);
         fs.createReadStream(videoPath).pipe(res);
+    }
+});
+
+// Update video route
+router.put('/:id', auth, upload.single('video'), async (req, res) => {
+    try {
+        const videoId = req.params.id;
+        const video = await Video.findById(videoId);
+
+        if (!video) {
+            return res.status(404).json({
+                success: false,
+                message: 'Video not found'
+            });
+        }
+
+        // Update title
+        if (req.body.title) {
+            video.title = req.body.title;
+        }
+
+        // If new video file is uploaded
+        if (req.file) {
+            // Delete old video file
+            const oldVideoPath = path.join(__dirname, '../public', video.videoPath);
+            if (fs.existsSync(oldVideoPath)) {
+                fs.unlinkSync(oldVideoPath);
+            }
+
+            // Update with new video path
+            video.videoPath = `/uploads/${req.file.filename}`;
+        }
+
+        await video.save();
+
+        res.json({
+            success: true,
+            message: 'Video updated successfully',
+            video
+        });
+    } catch (error) {
+        console.error('Update error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update video'
+        });
+    }
+});
+
+// Delete video route
+router.delete('/:id', auth, async (req, res) => {
+    try {
+        const videoId = req.params.id;
+        const video = await Video.findById(videoId);
+
+        if (!video) {
+            return res.status(404).json({
+                success: false,
+                message: 'Video not found'
+            });
+        }
+
+        // Delete video file from storage
+        const videoPath = path.join(__dirname, '../public', video.videoPath);
+        if (fs.existsSync(videoPath)) {
+            fs.unlinkSync(videoPath);
+        }
+
+        // Remove video document from database
+        await Video.findByIdAndDelete(videoId);
+
+        res.json({
+            success: true,
+            message: 'Video deleted successfully'
+        });
+    } catch (error) {
+        console.error('Delete error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete video'
+        });
+    }
+});
+
+
+// Get all videos for admin
+router.get('/', auth, async (req, res) => {
+    try {
+        const videos = await Video.find().sort({ uploadDate: -1 });
+        res.json(videos);  // Trả về trực tiếp mảng videos
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch videos'
+        });
     }
 });
 module.exports = router;

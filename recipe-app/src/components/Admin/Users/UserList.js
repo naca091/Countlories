@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, message, Popconfirm, Input, Tag } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Table, Button, Space, message, Popconfirm, Input, Tag, Modal, InputNumber } from 'antd';
+import { EditOutlined, DeleteOutlined, PlusOutlined, ReloadOutlined, WalletOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import UserForm from './UserForm';
 
@@ -12,6 +12,9 @@ const UserList = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isAddXuModalVisible, setIsAddXuModalVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [xuAmount, setXuAmount] = useState(0);
 
   // Fetch users
   const fetchUsers = async () => {
@@ -34,6 +37,28 @@ const UserList = () => {
   useEffect(() => {
     fetchUsers();
   }, [searchTerm]);
+
+  // Handle add xu
+  const handleAddXu = async () => {
+    try {
+      await axios.post(`http://localhost:5000/api/users/${selectedUser._id}/add-xu`, {
+        amount: xuAmount
+      });
+      message.success('Xu added successfully');
+      setIsAddXuModalVisible(false);
+      setSelectedUser(null);
+      setXuAmount(0);
+      fetchUsers();
+    } catch (error) {
+      message.error(error.response?.data?.message || 'Failed to add xu');
+    }
+  };
+
+  // Show add xu modal
+  const showAddXuModal = (user) => {
+    setSelectedUser(user);
+    setIsAddXuModalVisible(true);
+  };
 
   // Delete user
   const handleDelete = async (id) => {
@@ -92,10 +117,10 @@ const UserList = () => {
       key: 'phone',
     },
     {
-      title: 'Coins',
-      dataIndex: 'coins',
-      key: 'coins',
-      render: (coins) => <Tag color="blue">{coins}</Tag>,
+      title: 'Xu',
+      dataIndex: 'xu',
+      key: 'xu',
+      render: (xu) => <Tag color="gold">{xu}</Tag>,
     },
     {
       title: 'Role',
@@ -117,6 +142,13 @@ const UserList = () => {
       key: 'actions',
       render: (_, record) => (
         <Space>
+          <Button 
+            icon={<WalletOutlined />}
+            onClick={() => showAddXuModal(record)}
+            style={{ backgroundColor: '#ffd700', color: '#fff' }}
+          >
+            Add Xu
+          </Button>
           <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} />
           <Popconfirm
             title={`Are you sure you want to ${
@@ -188,6 +220,30 @@ const UserList = () => {
         }}
         initialValues={editingUser}
       />
+
+      <Modal
+        title={`Add Xu for ${selectedUser?.username}`}
+        open={isAddXuModalVisible}
+        onOk={handleAddXu}
+        onCancel={() => {
+          setIsAddXuModalVisible(false);
+          setSelectedUser(null);
+          setXuAmount(0);
+        }}
+      >
+        <div className="mb-4">
+          <p>Current Xu: <Tag color="gold">{selectedUser?.xu}</Tag></p>
+        </div>
+        <div>
+          <InputNumber
+            className="w-full"
+            min={1}
+            placeholder="Enter amount of xu to add"
+            value={xuAmount}
+            onChange={(value) => setXuAmount(value)}
+          />
+        </div>
+      </Modal>
     </div>
   );
 };

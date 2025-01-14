@@ -11,8 +11,9 @@ import UserProfile from './components/User/Profile';
 import UserList from './components/Admin/Users/UserList';
 import RoleList from './components/Admin/Roles/RoleList';
 import ResetPassword from './components/User//ReserPassword';
-import AdminVideoUpload from './components/Admin/AdminUploadVideo';
+import VideoList from './components/Admin/Video/VideoList';
 import SeeVideo from './components/User/SeeVideo';
+import DashBoard from './components/Admin/Dashboard/Dashboard';
 
 // Lazy load components
 const Register = React.lazy(() => import('./components/User/Register'));
@@ -37,8 +38,9 @@ function App() {
             <Route path="/admin/user" element={<UserList />} />
             <Route path="/admin/roles" element={<RoleList />} />
             <Route path="/user/resetpassword" element={<ResetPassword />} />
-            <Route path="/admin/upload-video" element={<AdminVideoUpload />} />
+            <Route path="/admin/video" element={<VideoList />} />
             <Route path="/user/see-video" element={<SeeVideo />} />
+            <Route path="/admin/dashboard" element={<DashBoard />} />
 
           </Routes>
         </Suspense>

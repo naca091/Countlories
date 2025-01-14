@@ -248,110 +248,47 @@ router.delete('/api/users/:userId', async (req, res) => {
     }
 });
 
-// User Registration Route
-/*router.post('/api/users/register', async (req, res) => {
-    const { username, password, email, fullName, phone, address } = req.body;
-
+// Add coins to user
+// Add xu to user
+router.post('/api/users/:userId/add-xu', async (req, res) => {
     try {
-        // Validate input
-        if (!username || !password || !email || !fullName) {
-            return res.status(400).json({
-                success: false,
-                message: 'All required fields must be provided',
-            });
-        }
-
-        // Check for existing user
-        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-        if (existingUser) {
-            return res.status(400).json({
-                success: false,
-                message: 'Username or email already exists',
-            });
-        }
-
-        // Find member role with retry mechanism
-        let memberRole;
-        for (let i = 0; i < 3; i++) { // Try up to 3 times
-            memberRole = await Role.findOne({ roleId: 1 });
-            if (memberRole) break;
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retry
-        }
-
-        if (!memberRole) {
-            return res.status(500).json({
-                success: false,
-                message: 'System initialization in progress. Please try again later.',
-            });
-        }
-
-        // Create new user (no hashing of password)
-        const newUser = new User({
-            username,
-            password, // Lưu mật khẩu trực tiếp
-            email,
-            fullName,
-            phone: phone || '',
-            address: address || '',
-            role: memberRole._id,
-            xu, // Default value for xu
-            avatar: '', // Default avatar value
-        });
-
-        await newUser.save();
-
-        res.status(201).json({
-            success: true,
-            message: 'Registration successful! Please login to continue.',
-        });
-    } catch (error) {
-        console.error('Registration error:', error);
-
-        if (error.name === 'ValidationError') {
-            const errors = Object.values(error.errors).map(err => err.message);
-            return res.status(400).json({
-                success: false,
-                message: errors.join(', '),
-            });
-        }
-
-        res.status(500).json({
-            success: false,
-            message: 'Registration failed. Please try again later.',
-        });
-    }
-});
-
-
-router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-  
-    try {
-      // Tìm user dựa trên email
-      const user = await User.findOne({ email });
-  
-      // Kiểm tra nếu user tồn tại và mật khẩu đúng
-      if (!user || user.password !== password) {
-        return res.status(401).json({
+      const { amount } = req.body;
+      
+      if (!amount || amount <= 0) {
+        return res.status(400).json({
           success: false,
-          message: 'Email or password is incorrect',
+          message: 'Invalid amount'
         });
       }
   
-      // Trả về thông tin email
+      const user = await User.findById(req.params.userId);
+      
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found'
+        });
+      }
+  
+      // Add xu to user's balance
+      user.xu = (user.xu || 0) + amount;
+      await user.save();
+  
       res.json({
         success: true,
-        message: 'Login successful',
-        userEmail: user.email,
-        userxu: user.xu, // Giả sử bạn có cột 'coins' trong schema User
+        message: 'Xu added successfully',
+        data: {
+          userId: user._id,
+          newBalance: user.xu
+        }
       });
     } catch (error) {
-        console.error('Error in login:', error);  
-        return res.status(500).json({  
-            success: false,  
-            message: 'An error occurred while logging in.',  
-            error: error.message,  
-        });  
+      console.error('Error adding xu:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to add xu',
+        error: error.message
+      });
     }
-  });*/
+  });
 module.exports = router;
