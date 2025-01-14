@@ -1,21 +1,17 @@
-import React from 'react';
-import { Card, Button } from 'antd';
-import { UnlockOutlined } from '@ant-design/icons';
+import React from "react";
+import { Card, Button } from "antd";
+import { UnlockOutlined } from "@ant-design/icons";
 
 const MenuCard = ({ menu, onSeeMenu }) => (
-  <Card
-
-  >
-    <div
-
-    >
+  <Card>
+    <div>
       <img
         alt={menu.name}
         src={`http://localhost:5000${menu.image}`}
         className="absolute top-0 left-0 w-full h-full object-cover"
         onError={(e) => {
           e.target.onerror = null;
-          e.target.src = '/api/placeholder/50/50'; // Placeholder cho kích thước 200x300
+          e.target.src = "/api/placeholder/50/50"; // Placeholder cho kích thước 200x300
         }}
       />
     </div>
