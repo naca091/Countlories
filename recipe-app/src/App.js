@@ -13,6 +13,7 @@ import RoleList from "./components/Admin/Roles/RoleList";
 import ResetPassword from "./components/User//ReserPassword";
 import AdminVideoUpload from "./components/Admin/AdminUploadVideo";
 import SeeVideo from "./components/User/SeeVideo";
+import NapXu from "./components/User/NapXu";
 
 // Lazy load components
 const Register = React.lazy(() => import("./components/User/Register"));
@@ -41,6 +42,7 @@ function App() {
             <Route path="/user/resetpassword" element={<ResetPassword />} />
             <Route path="/admin/upload-video" element={<AdminVideoUpload />} />
             <Route path="/user/see-video" element={<SeeVideo />} />
+            <Route path="/user/nap-xu" element={<NapXu />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
