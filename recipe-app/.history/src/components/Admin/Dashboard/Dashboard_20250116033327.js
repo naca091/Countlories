@@ -7,8 +7,7 @@ import {
   InsertRowLeftOutlined,
   UserAddOutlined,
   VideoCameraAddOutlined,
-  CaretDownOutlined,
-  ControlOutlined
+  CaretDownOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import CategoryList from '../Categories/CategoryList';
@@ -47,8 +46,6 @@ const AdminDashboard = () => {
         return <UserList />;
       case '6':
         return <VideoList />;
-        case '7':
-        return <CounterLogin />;
       default:
         return (
           <div className="p-6">
@@ -88,11 +85,6 @@ const AdminDashboard = () => {
       key: '6',
       icon: <VideoCameraAddOutlined />,
       label: 'Video List'
-    },
-    {
-      key: '7',
-      icon: <ControlOutlined />,
-      label: 'Counter Login'
     }
   ];
 

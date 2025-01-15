@@ -1,0 +1,6 @@
+- Ở homepage, thêm chức năng điểm danh, thêm routes attendence
+- Thêm routes counter dành cho điểm danh
+- Thêm 2 schema counter, attendence trong folder config và models
+- Chỉnh sửa lại routes/auth.js, middleware/auth.js 
+- Chỉnh sửa lại server.js 
+- Đã chỉnh sửa lại để /user/profile hiển thị đầy đủ thông tin User
