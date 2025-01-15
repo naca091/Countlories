@@ -14,7 +14,13 @@ import logo from "./images/logo.jpg";
 import "./fontend/header.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-const Header = ({ userEmail, userXu, navigateToProfile, handleLogout }) => {
+const Header = ({
+  userEmail,
+  userXu,
+  navigateToProfile,
+  handleLogout,
+  navigateToSeeVideo,
+}) => {
   const navigate = useNavigate();
 
   const handleSearch = (value) => {
@@ -85,7 +91,11 @@ const Header = ({ userEmail, userXu, navigateToProfile, handleLogout }) => {
           <Button type="link" icon={<PlusCircleOutlined />}>
             Add Coins
           </Button>
-          <Button type="link" icon={<PlayCircleOutlined />}>
+          <Button
+            type="link"
+            icon={<PlayCircleOutlined />}
+            onClick={navigateToSeeVideo}
+          >
             Watch Ads
           </Button>
         </div>

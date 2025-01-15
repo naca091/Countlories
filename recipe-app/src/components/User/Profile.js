@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import Header from "./header";
 import Footer from "./footer";
 import "./fontend/login.css";
+import { ProfileOutlined } from "@ant-design/icons";
 
 const Profile = () => {
   const { state } = useLocation();
@@ -69,32 +70,44 @@ const Profile = () => {
         navigateToProfile={() => {}}
         handleLogout={() => {}}
       />
-      <div className="container">
-        <div className="form-container" center>
-          <div style={{ padding: "20px" }}>
-            <h1>User Profile</h1>
-            {loading ? (
-              <p>Loading...</p>
-            ) : (
-              <Form layout="vertical">
-                {Object.keys(user).map((key) => (
-                  <Form.Item key={key} label={key}>
-                    <Input
-                      name={key}
-                      value={user[key]}
-                      onChange={handleInputChange}
-                    />
-                    <Button
-                      type="primary"
-                      onClick={() => handleUpdate(key)}
-                      style={{ marginTop: "10px" }}
-                    >
-                      Update {key}
-                    </Button>
-                  </Form.Item>
-                ))}
-              </Form>
-            )}
+      <div className="profile">
+        <div className="container">
+          <div className="form-container">
+            <div>
+              <h1>
+                <ProfileOutlined /> User Profile
+              </h1>
+              {loading ? (
+                <p>Loading...</p>
+              ) : (
+                <Form layout="vertical">
+                  {Object.keys(user).map((key) => (
+                    <Form.Item key={key} label={key}>
+                      <Input
+                        name={key}
+                        value={user[key]}
+                        onChange={handleInputChange}
+                      />
+                      <Button
+                        type="default"
+                        onClick={() => handleUpdate(key)}
+                        style={{ marginTop: "10px" }}
+                      >
+                        Update {key}
+                      </Button>
+                    </Form.Item>
+                  ))}
+                </Form>
+              )}
+            </div>
+          </div>
+          <div className="image-container">
+            <img
+              alt="A beautiful still life painting of a bouquet of flowers in a vase."
+              height="600"
+              src="https://storage.googleapis.com/a1aa/image/PljjEMSYjA7RDZGiXbl2V8co53pwHfSTOfEztlF93eq6t4EoA.jpg"
+              width="450"
+            />
           </div>
         </div>
       </div>

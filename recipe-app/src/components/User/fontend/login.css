@@ -11,6 +11,17 @@
   color: #333;
   min-height: 100vh;
 }
+.profile {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background-color: #ffffff4d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  color: #333;
+  min-height: 100vh;
+}
 
 .container {
   background-color: #ffffff;
@@ -23,7 +34,7 @@
 }
 
 .form-container {
-  padding: 20px;
+  padding:  20px;
   flex: 1;
 }
 
