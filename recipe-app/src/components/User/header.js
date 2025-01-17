@@ -19,16 +19,19 @@ const Header = ({
   userXu,
   navigateToProfile,
   handleLogout,
-  navigateToSeeVideo,
-  setUserXu, // Thêm setUserXu nếu cần cập nhật từ cha
+  // navigateToSeeVideo,
+  setUserXu,
+  onSearch,
 }) => {
   const navigate = useNavigate();
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
   const handleSearch = (value) => {
     console.log("Search value:", value);
+    if (onSearch) {
+      onSearch(value);
+    }
   };
-
   return (
     <div>
       {/* Main Navbar */}

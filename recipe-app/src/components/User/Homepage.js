@@ -112,7 +112,11 @@ const Homepage = () => {
 
   //search
   const handleSearch = (value) => {
-    console.log("Search value:", value);
+    const searchValue = value.toLowerCase();
+    const filtered = menus.filter((menu) =>
+      menu.name.toLowerCase().includes(searchValue)
+    );
+    setFilteredMenus(filtered);
   };
 
   // Filter function
@@ -202,6 +206,7 @@ const Homepage = () => {
           localStorage.removeItem("token");
           navigate("/login");
         }}
+        onSearch={handleSearch}
       />
       <Carousel autoplay className="rounded-lg overflow-hidden carousel">
         {bannerImages.map((image, index) => (
