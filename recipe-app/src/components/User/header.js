@@ -33,7 +33,7 @@ const Header = ({
     <div>
       {/* Main Navbar */}
       <div className="navbar">
-        <div className="logo">
+        <div className="logo" onClick={() => navigate("/user/homepage")}>
           <img src={logo} alt="Logo" className="logo-image" />
           <h1>Recipe App</h1>
         </div>
@@ -92,11 +92,15 @@ const Header = ({
           <Button
             type="link"
             icon={<HomeOutlined />}
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/user/homepage")}
           >
             Home
           </Button>
-          <Button type="link" icon={<AppstoreOutlined />}>
+          <Button
+            type="link"
+            icon={<AppstoreOutlined />}
+            onClick={() => navigate("/user/homepage")}
+          >
             Products
           </Button>
           <Button type="link" icon={<BookOutlined />}>
@@ -105,13 +109,17 @@ const Header = ({
           <Button type="link" icon={<CalculatorOutlined />}>
             Calories Tools
           </Button>
-          <Button type="link" icon={<PlusCircleOutlined />}>
+          <Button
+            type="link"
+            icon={<PlusCircleOutlined />}
+            onClick={() => navigate("/user/nap-xu")}
+          >
             Add Coins
           </Button>
           <Button
             type="link"
             icon={<PlayCircleOutlined />}
-            onClick={navigateToSeeVideo}
+            onClick={() => navigate("/user/see-video")}
           >
             Watch Ads
           </Button>

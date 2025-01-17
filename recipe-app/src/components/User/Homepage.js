@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Row, Col, Spin, Card, Carousel, message } from "antd";
+import { Row, Col, Spin, Card, Carousel, message, Input } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import MenuDetailModal from "./Menu/MenuDetailModal";
 import Header from "./header";
@@ -14,18 +14,19 @@ import MenuFilter from "./Menu/MenuFilter";
 
 const Homepage = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const { userEmail, userxu: initialUserXu } = state || {
-    userEmail: "",
-    userxu: 0,
-  };
+  // const { state } = useLocation();
+  // const { userEmail, userxu: initialUserXu } = state || {
+  //   userEmail: "",
+  //   userxu: 0,
+  // };
 
   const [menus, setMenus] = useState([]);
   const [filteredMenus, setFilteredMenus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [userXu, setUserXu] = useState(initialUserXu);
+  const [userXu, setUserXu] = useState(0);
+  const [userEmail, setUserEmail] = useState("");
   const [purchasedMenus, setPurchasedMenus] = useState([]);
   const [filterValues, setFilterValues] = useState({
     totalCookingTimeMin: "",
@@ -49,6 +50,34 @@ const Homepage = () => {
   }, [menus]);
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        message.error("You are not logged in. Redirecting to login...");
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const response = await axios.get("http://localhost:5000/api/auth/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.data.success) {
+          setUserEmail(response.data.user.email);
+          setUserXu(response.data.user.xu);
+          setPurchasedMenus(
+            response.data.user.purchasedMenus.map((menu) => menu.menuId)
+          );
+        } else {
+          message.error("Failed to fetch user data.");
+          navigate("/login");
+        }
+      } catch (error) {
+        message.error("Error validating user session. Please log in again.");
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    };
     const fetchMenus = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/menus");
@@ -62,8 +91,9 @@ const Homepage = () => {
         setLoading(false);
       }
     };
+    fetchUserData();
     fetchMenus();
-  }, []);
+  }, [navigate]);
 
   const handleMenuClick = (menu) => {
     setSelectedMenu(menu);
@@ -78,6 +108,11 @@ const Homepage = () => {
   const handlePurchaseSuccess = (newXuBalance, menuId) => {
     setUserXu(newXuBalance);
     setPurchasedMenus([...purchasedMenus, menuId]);
+  };
+
+  //search
+  const handleSearch = (value) => {
+    console.log("Search value:", value);
   };
 
   // Filter function
@@ -163,7 +198,10 @@ const Homepage = () => {
         userEmail={userEmail}
         userXu={userXu}
         navigateToProfile={() => navigate("/user/profile")}
-        handleLogout={() => navigate("/login")}
+        handleLogout={() => {
+          localStorage.removeItem("token");
+          navigate("/login");
+        }}
       />
       <Carousel autoplay className="rounded-lg overflow-hidden carousel">
         {bannerImages.map((image, index) => (
@@ -176,6 +214,15 @@ const Homepage = () => {
           </div>
         ))}
       </Carousel>
+      <div className="navbar">
+        <div className="search-bar">
+          <Input.Search
+            placeholder="Search menu by name"
+            onSearch={handleSearch}
+            enterButton
+          />
+        </div>
+      </div>
       <div className="banner-line"></div>
       <MenuFilter
         filterValues={filterValues}
