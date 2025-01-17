@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, message, Popconfirm } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import axios from 'axios';
-import IngredientForm from './IngredientForm';
+import React, { useState, useEffect } from "react";
+import { Table, Button, Space, message, Popconfirm } from "antd";
+import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import axios from "axios";
+import IngredientForm from "./IngredientForm";
 
 const IngredientList = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -14,13 +14,15 @@ const IngredientList = () => {
   const fetchIngredients = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/ingredients');
+      const response = await axios.get("http://localhost:5000/api/ingredients");
       const data = Array.isArray(response.data?.data)
-        ? response.data.data.map(item => ({ ...item, key: item.id }))
+        ? response.data.data.map((item) => ({ ...item, key: item.id }))
         : [];
       setIngredients(data);
     } catch (error) {
-      message.error(error.response?.data?.message || 'Failed to fetch ingredients');
+      message.error(
+        error.response?.data?.message || "Failed to fetch ingredients"
+      );
     } finally {
       setLoading(false);
     }
@@ -34,10 +36,12 @@ const IngredientList = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/ingredients/${id}`);
-      message.success('Ingredient deleted successfully');
+      message.success("Ingredient deleted successfully");
       fetchIngredients();
     } catch (error) {
-      message.error(error.response?.data?.message || 'Failed to delete ingredient');
+      message.error(
+        error.response?.data?.message || "Failed to delete ingredient"
+      );
     }
   };
 
@@ -56,18 +60,18 @@ const IngredientList = () => {
   // Table columns
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: 'Actions',
-      key: 'actions',
+      title: "Actions",
+      key: "actions",
       render: (_, record) => (
         <Space>
           <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} />

@@ -106,13 +106,7 @@ const userSchema = new mongoose.Schema({
 });
 
   
-  /*userSchema.methods.generateToken = async function() {  
-    const user = this;  
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {  
-      expiresIn: '7d',  
-    });  
-    return token;      
-  };*/
+
 
 //ingredients schema
 const ingredientSchema = new mongoose.Schema({
@@ -240,21 +234,7 @@ const menuSchema = new mongoose.Schema({
   toObject: { virtuals: true }  
 });
 
-// UserMenu Schema - Thêm rating và bookmark
-const userMenuSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  menuId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Menu',
-    required: true
-  },
-}, {
-  timestamps: true
-});
+
 
 //Video Schema 
 // video Schema
@@ -273,23 +253,39 @@ const videoSchema = new mongoose.Schema({
       default: Date.now
   },
 });
-// Middleware để cập nhật rating trung bình của menu
-userMenuSchema.post('save', async function(doc) {
-  if (doc.rating && doc.rating.score) {
-    const Menu = mongoose.model('Menu');
-    const menu = await Menu.findById(doc.menuId);
-    
-    const newAvgRating = (menu.averageRating * menu.ratingCount + doc.rating.score) / (menu.ratingCount + 1);
-    
-    await Menu.findByIdAndUpdate(doc.menuId, {
-      $set: { averageRating: newAvgRating },
-      $inc: { ratingCount: 1 }
-    });
+
+const loginStatSchema = new mongoose.Schema({
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   }
 });
+loginStatSchema.index({ date: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });
+
+//attendence for user 
+const attendanceSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
+  }
+}, { timestamps: true });
+
+// Composite index to ensure one attendance per user per day
+attendanceSchema.index({ userId: 1, date: 1 }, { unique: true });
+
 
 // Indexes
-userMenuSchema.index({ userId: 1, menuId: 1 }, { unique: true });
 userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ username: 1 }, { unique: true });
 menuSchema.index({ name: 1 });
@@ -309,6 +305,7 @@ module.exports = {
   Ingredient: mongoose.model('Ingredient', ingredientSchema),
   Category: mongoose.model('Category', categorySchema),
   Menu: mongoose.model('Menu', menuSchema),
-  UserMenu: mongoose.model('UserMenu', userMenuSchema),
   Video: mongoose.model('Video', videoSchema),
+  LoginStat: mongoose.model('LoginStat', loginStatSchema),
+  Attendance: mongoose.model('Attendance', attendanceSchema)
 };

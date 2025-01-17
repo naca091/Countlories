@@ -1,7 +1,7 @@
 // CategoryForm.js
-import React from 'react';
-import { Modal, Form, Input, message } from 'antd';
-import axios from 'axios';
+import React from "react";
+import { Modal, Form, Input, message } from "antd";
+import axios from "axios";
 
 const CategoryForm = ({ visible, onCancel, onSuccess, initialValues }) => {
   const [form] = Form.useForm();
@@ -24,25 +24,25 @@ const CategoryForm = ({ visible, onCancel, onSuccess, initialValues }) => {
           `http://localhost:5000/api/categories/${initialValues._id}`,
           values
         );
-        message.success('Category updated successfully');
+        message.success("Category updated successfully");
       } else {
-        await axios.post('http://localhost:5000/api/categories', values);
-        message.success('Category added successfully');
+        await axios.post("http://localhost:5000/api/categories", values);
+        message.success("Category added successfully");
       }
       form.resetFields();
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
-      console.error('Error details:', error.response?.data);
-      const errorMsg = error.response?.data?.message || 'Operation failed';
+      console.error("Error details:", error.response?.data);
+      const errorMsg = error.response?.data?.message || "Operation failed";
       message.error(errorMsg);
     }
   };
 
   return (
     <Modal
-      title={isEditing ? 'Edit Category' : 'Add New Category'}
+      title={isEditing ? "Edit Category" : "Add New Category"}
       open={visible}
       onCancel={() => {
         form.resetFields();
@@ -63,8 +63,8 @@ const CategoryForm = ({ visible, onCancel, onSuccess, initialValues }) => {
           name="name"
           label="Category Name"
           rules={[
-            { required: true, message: 'Please input the category name!' },
-            { min: 2, message: 'Name must be at least 2 characters long' }
+            { required: true, message: "Please input the category name!" },
+            { min: 2, message: "Name must be at least 2 characters long" },
           ]}
         >
           <Input />

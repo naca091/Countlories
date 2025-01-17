@@ -10,6 +10,7 @@ import banner2 from "./images/banner2.png";
 import banner3 from "./images/banner3.png";
 import banner4 from "./images/banner4.png";
 import "./fontend/homepage.css";
+import MenuFilter from "./Menu/MenuFilter";
 
 const Homepage = () => {
   const navigate = useNavigate();
@@ -26,6 +27,26 @@ const Homepage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userXu, setUserXu] = useState(initialUserXu);
   const [purchasedMenus, setPurchasedMenus] = useState([]);
+  const [filterValues, setFilterValues] = useState({
+    totalCookingTimeMin: "",
+    totalCookingTimeMax: "",
+    difficulty: "",
+    servingSizeMin: "",
+    servingSizeMax: "",
+    categoryId: "",
+    caloriesMin: "",
+    caloriesMax: "",
+  });
+
+  const categories = React.useMemo(() => {
+    const uniqueCategories = new Set();
+    menus.forEach((menu) => {
+      if (menu.category && menu.category._id && menu.category.name) {
+        uniqueCategories.add(JSON.stringify(menu.category));
+      }
+    });
+    return Array.from(uniqueCategories).map((cat) => JSON.parse(cat));
+  }, [menus]);
 
   useEffect(() => {
     const fetchMenus = async () => {
@@ -59,6 +80,81 @@ const Homepage = () => {
     setPurchasedMenus([...purchasedMenus, menuId]);
   };
 
+  // Filter function
+  const handleFilter = () => {
+    const filtered = menus.filter((menu) => {
+      // Calculate total cooking time
+      const totalCookingTime = menu.cookingTime.prep + menu.cookingTime.cook;
+
+      // Total Cooking Time Filter
+      if (
+        filterValues.totalCookingTimeMin &&
+        totalCookingTime < Number(filterValues.totalCookingTimeMin)
+      )
+        return false;
+      if (
+        filterValues.totalCookingTimeMax &&
+        totalCookingTime > Number(filterValues.totalCookingTimeMax)
+      )
+        return false;
+
+      // Difficulty Filter
+      if (
+        filterValues.difficulty &&
+        menu.difficulty !== filterValues.difficulty
+      )
+        return false;
+
+      // Serving Size Filter
+      if (
+        filterValues.servingSizeMin &&
+        menu.servingSize < Number(filterValues.servingSizeMin)
+      )
+        return false;
+      if (
+        filterValues.servingSizeMax &&
+        menu.servingSize > Number(filterValues.servingSizeMax)
+      )
+        return false;
+
+      // Category Filter
+      if (
+        filterValues.categoryId &&
+        menu.category._id !== filterValues.categoryId
+      )
+        return false;
+
+      // Calories Filter
+      if (
+        filterValues.caloriesMin &&
+        menu.calories < Number(filterValues.caloriesMin)
+      )
+        return false;
+      if (
+        filterValues.caloriesMax &&
+        menu.calories > Number(filterValues.caloriesMax)
+      )
+        return false;
+
+      return true;
+    });
+
+    setFilteredMenus(filtered);
+  };
+  const handleClearFilter = () => {
+    setFilterValues({
+      totalCookingTimeMin: "",
+      totalCookingTimeMax: "",
+      difficulty: "",
+      servingSizeMin: "",
+      servingSizeMax: "",
+      categoryId: "",
+      caloriesMin: "",
+      caloriesMax: "",
+    });
+    setFilteredMenus(menus);
+  };
+
   const bannerImages = [banner1, banner2, banner3, banner4];
 
   return (
@@ -81,6 +177,13 @@ const Homepage = () => {
         ))}
       </Carousel>
       <div className="banner-line"></div>
+      <MenuFilter
+        filterValues={filterValues}
+        setFilterValues={setFilterValues}
+        categories={categories}
+        onFilter={handleFilter}
+        onClearFilter={handleClearFilter}
+      />
       {loading ? (
         <Spin size="large" />
       ) : (

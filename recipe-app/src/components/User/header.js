@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Input, Button } from "antd";
 import {
   HomeOutlined,
@@ -8,11 +8,11 @@ import {
   PlusCircleOutlined,
   PlayCircleOutlined,
 } from "@ant-design/icons";
-
 import { useNavigate } from "react-router-dom";
 import logo from "./images/logo.jpg";
 import "./fontend/header.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import AttendanceCalendar from "./AttendanceCalendar";
 
 const Header = ({
   userEmail,
@@ -20,8 +20,10 @@ const Header = ({
   navigateToProfile,
   handleLogout,
   navigateToSeeVideo,
+  setUserXu, // Thêm setUserXu nếu cần cập nhật từ cha
 }) => {
   const navigate = useNavigate();
+  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
   const handleSearch = (value) => {
     console.log("Search value:", value);
@@ -50,6 +52,17 @@ const Header = ({
             <strong>
               Balance: {userXu} xu <i className="fa-solid fa-coins"></i>
             </strong>
+            <Button
+              onClick={() => setIsCalendarVisible(true)}
+              className="bg-blue-500 text-white"
+            >
+              Calendar
+            </Button>
+            <AttendanceCalendar
+              visible={isCalendarVisible}
+              onClose={() => setIsCalendarVisible(false)}
+              onAttendanceSuccess={(newBalance) => setUserXu(newBalance)}
+            />
             <Button type="dashed" onClick={navigateToProfile}>
               <i className="fa-solid fa-id-card"></i>
               Go to Profile
@@ -76,7 +89,11 @@ const Header = ({
       {/* Secondary Navbar */}
       <div className="navbar secondary-navbar">
         <div className="nav-links">
-          <Button type="link" icon={<HomeOutlined />}>
+          <Button
+            type="link"
+            icon={<HomeOutlined />}
+            onClick={() => navigate("/")}
+          >
             Home
           </Button>
           <Button type="link" icon={<AppstoreOutlined />}>

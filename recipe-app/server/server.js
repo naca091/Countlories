@@ -14,7 +14,8 @@ const userRouter = require("./routes/users");
 const authRoutes = require("./routes/auth");
 const resetPasswordRoutes = require("./routes/resetPassword");
 const videoRoutes = require("./routes/videoRoutes");
-
+const statsRouter = require("./routes/stats");
+const attendanceRouter = require("./routes/attendance");
 dotenv.config();
 
 const app = express();
@@ -60,6 +61,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/auth", resetPasswordRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use("/api/videos", videoRoutes);
+app.use("/api", statsRouter);
+app.use("/api", attendanceRouter);
 
 app.use(express.static(path.join(__dirname, "public")));
 

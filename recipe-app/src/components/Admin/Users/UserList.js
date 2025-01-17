@@ -1,8 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, message, Popconfirm, Input, Tag } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
-import axios from 'axios';
-import UserForm from './UserForm';
+import React, { useState, useEffect } from "react";
+import {
+  Table,
+  Button,
+  Space,
+  message,
+  Popconfirm,
+  Input,
+  Tag,
+  Modal,
+  InputNumber,
+} from "antd";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  ReloadOutlined,
+  WalletOutlined,
+} from "@ant-design/icons";
+import axios from "axios";
+import UserForm from "./UserForm";
 
 const { Search } = Input;
 
@@ -11,13 +27,16 @@ const UserList = () => {
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isAddXuModalVisible, setIsAddXuModalVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [xuAmount, setXuAmount] = useState(0);
 
   // Fetch users
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/users', {
+      const response = await axios.get("http://localhost:5000/api/users", {
         params: { search: searchTerm },
       });
       const data = Array.isArray(response.data?.data)
@@ -25,7 +44,7 @@ const UserList = () => {
         : [];
       setUsers(data);
     } catch (error) {
-      message.error(error.response?.data?.message || 'Failed to fetch users');
+      message.error(error.response?.data?.message || "Failed to fetch users");
     } finally {
       setLoading(false);
     }
@@ -35,25 +54,56 @@ const UserList = () => {
     fetchUsers();
   }, [searchTerm]);
 
+  // Handle add xu
+  const handleAddXu = async () => {
+    try {
+      await axios.post(
+        `http://localhost:5000/api/users/${selectedUser._id}/add-xu`,
+        {
+          amount: xuAmount,
+        }
+      );
+      message.success("Xu added successfully");
+      setIsAddXuModalVisible(false);
+      setSelectedUser(null);
+      setXuAmount(0);
+      fetchUsers();
+    } catch (error) {
+      message.error(error.response?.data?.message || "Failed to add xu");
+    }
+  };
+
+  // Show add xu modal
+  const showAddXuModal = (user) => {
+    setSelectedUser(user);
+    setIsAddXuModalVisible(true);
+  };
+
   // Delete user
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/users/${id}`);
-      message.success('User deleted successfully');
+      message.success("User deleted successfully");
       fetchUsers();
     } catch (error) {
-      message.error(error.response?.data?.message || 'Failed to delete user');
+      message.error(error.response?.data?.message || "Failed to delete user");
     }
   };
 
   // Toggle user activation
   const toggleActivation = async (id, isActive) => {
     try {
-      await axios.patch(`http://localhost:5000/api/users/${id}`, { isActive: !isActive });
-      message.success(`User ${isActive ? 'deactivated' : 'activated'} successfully`);
+      await axios.patch(`http://localhost:5000/api/users/${id}`, {
+        isActive: !isActive,
+      });
+      message.success(
+        `User ${isActive ? "deactivated" : "activated"} successfully`
+      );
       fetchUsers();
     } catch (error) {
-      message.error(error.response?.data?.message || 'Failed to update user status');
+      message.error(
+        error.response?.data?.message || "Failed to update user status"
+      );
     }
   };
 
@@ -72,62 +122,69 @@ const UserList = () => {
   // Table columns
   const columns = [
     {
-      title: 'Username',
-      dataIndex: 'username',
-      key: 'username',
+      title: "Username",
+      dataIndex: "username",
+      key: "username",
     },
     {
-      title: 'Full Name',
-      dataIndex: 'fullName',
-      key: 'fullName',
+      title: "Full Name",
+      dataIndex: "fullName",
+      key: "fullName",
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: 'Phone',
-      dataIndex: 'phone',
-      key: 'phone',
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
     },
     {
-      title: 'Coins',
-      dataIndex: 'coins',
-      key: 'coins',
-      render: (coins) => <Tag color="blue">{coins}</Tag>,
+      title: "Xu",
+      dataIndex: "xu",
+      key: "xu",
+      render: (xu) => <Tag color="gold">{xu}</Tag>,
     },
     {
-      title: 'Role',
-      dataIndex: ['role', 'name'],
-      key: 'role',
+      title: "Role",
+      dataIndex: ["role", "name"],
+      key: "role",
     },
     {
-      title: 'Status',
-      dataIndex: 'isActive',
-      key: 'isActive',
+      title: "Status",
+      dataIndex: "isActive",
+      key: "isActive",
       render: (isActive) => (
-        <Tag color={isActive ? 'green' : 'red'}>
-          {isActive ? 'Active' : 'Inactive'}
+        <Tag color={isActive ? "green" : "red"}>
+          {isActive ? "Active" : "Inactive"}
         </Tag>
       ),
     },
     {
-      title: 'Actions',
-      key: 'actions',
+      title: "Actions",
+      key: "actions",
       render: (_, record) => (
         <Space>
+          <Button
+            icon={<WalletOutlined />}
+            onClick={() => showAddXuModal(record)}
+            style={{ backgroundColor: "#ffd700", color: "#fff" }}
+          >
+            Add Xu
+          </Button>
           <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} />
           <Popconfirm
             title={`Are you sure you want to ${
-              record.isActive ? 'deactivate' : 'activate'
+              record.isActive ? "deactivate" : "activate"
             } this user?`}
             onConfirm={() => toggleActivation(record._id, record.isActive)}
             okText="Yes"
             cancelText="No"
           >
             <Button type="primary">
-              {record.isActive ? 'Deactivate' : 'Activate'}
+              {record.isActive ? "Deactivate" : "Activate"}
             </Button>
           </Popconfirm>
           <Popconfirm
@@ -188,6 +245,32 @@ const UserList = () => {
         }}
         initialValues={editingUser}
       />
+
+      <Modal
+        title={`Add Xu for ${selectedUser?.username}`}
+        open={isAddXuModalVisible}
+        onOk={handleAddXu}
+        onCancel={() => {
+          setIsAddXuModalVisible(false);
+          setSelectedUser(null);
+          setXuAmount(0);
+        }}
+      >
+        <div className="mb-4">
+          <p>
+            Current Xu: <Tag color="gold">{selectedUser?.xu}</Tag>
+          </p>
+        </div>
+        <div>
+          <InputNumber
+            className="w-full"
+            min={1}
+            placeholder="Enter amount of xu to add"
+            value={xuAmount}
+            onChange={(value) => setXuAmount(value)}
+          />
+        </div>
+      </Modal>
     </div>
   );
 };

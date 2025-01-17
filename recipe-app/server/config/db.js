@@ -240,6 +240,37 @@ const videoSchema = new mongoose.Schema({
   toJSON: { virtuals: true },  
   toObject: { virtuals: true }  
 });
+const loginStatSchema = new mongoose.Schema({
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
+});
+
+//attdence for user
+const attendanceSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
+  }
+}, { timestamps: true });
+
+// Composite index to ensure one attendance per user per day
+attendanceSchema.index({ userId: 1, date: 1 }, { unique: true });
+
+// Tự động xóa records cũ hơn 30 ngày
+loginStatSchema.index({ date: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });
 
 // User Methods
 userSchema.pre('save', async function(next) {
@@ -289,6 +320,8 @@ const Ingredient = mongoose.model('Ingredient', ingredientSchema);
 const Category = mongoose.model('Category', categorySchema);
 const Menu = mongoose.model('Menu', menuSchema);
 const Video = mongoose.model('Video', videoSchema);
+const LoginStat = mongoose.model('LoginStat', loginStatSchema);
+const Attendance = mongoose.model('Attendance', attendanceSchema);
 
 module.exports = {
   Role,
@@ -296,5 +329,7 @@ module.exports = {
   Ingredient,
   Category,
   Menu,
-  Video
+  Video,
+  LoginStat,
+  Attendance
 };
